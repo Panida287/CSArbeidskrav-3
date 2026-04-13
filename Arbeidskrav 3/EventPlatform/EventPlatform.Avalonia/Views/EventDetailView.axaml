@@ -1,0 +1,6 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="EventPlatform.Avalonia.Views.EventDetailView">
+    <!-- TODO: Implement Event Detail UI (Sprint 6) -->
+    <TextBlock Text="Event Detail View — not yet implemented" />
+</UserControl>

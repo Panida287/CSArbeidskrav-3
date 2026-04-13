@@ -1,0 +1,25 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:EventPlatform.Avalonia.ViewModels"
+        xmlns:views="using:EventPlatform.Avalonia.Views"
+        x:Class="EventPlatform.Avalonia.Views.MainWindow"
+        Title="EventPlatform Oslo"
+        Width="1024" Height="700">
+
+    <ContentControl Content="{Binding CurrentPage}">
+        <ContentControl.DataTemplates>
+            <DataTemplate DataType="{x:Type vm:LoginViewModel}">
+                <views:LoginView />
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type vm:EventListViewModel}">
+                <views:EventListView />
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type vm:EventDetailViewModel}">
+                <views:EventDetailView />
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type vm:BookingViewModel}">
+                <views:BookingView />
+            </DataTemplate>
+        </ContentControl.DataTemplates>
+    </ContentControl>
+</Window>
