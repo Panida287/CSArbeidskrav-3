@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>EventPlatform</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Add NuGet packages here, e.g.:
+    <PackageReference Include="Microsoft.Data.Sqlite" Version="8.*" />
+    <PackageReference Include="BCrypt.Net-Next" Version="4.*" />
+    -->
+  </ItemGroup>
+</Project>
