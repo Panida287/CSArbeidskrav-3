@@ -1,3 +1,5 @@
+using Microsoft.Data.Sqlite;
+
 namespace EventPlatform.Data;
 
 /// <summary>
@@ -13,6 +15,10 @@ public class AppDatabase
     }
 
     /// <summary>Opens and returns a new SQLite connection.</summary>
-    public object GetConnection() => throw new NotImplementedException();
-    // TODO: Return Microsoft.Data.Sqlite.SqliteConnection
+    public SqliteConnection GetConnection()
+    {
+        var connection = new SqliteConnection(_connectionString);
+        connection.Open();
+        return connection;
+    }
 }

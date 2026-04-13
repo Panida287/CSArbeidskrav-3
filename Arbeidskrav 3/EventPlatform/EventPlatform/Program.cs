@@ -4,8 +4,8 @@ using EventPlatform.UI.Menus;
 
 // Entry point — wires database, services, and menus together.
 
-var db = new AppDatabase();
-var seeder = new DatabaseSeeder(db);
+var db = new AppDatabase("eventplatform.db");
+var seeder = new DatabaseSeeder(db, sqlFolder: "../docs/sql");
 seeder.Seed();
 
 var userService = new UserService();
