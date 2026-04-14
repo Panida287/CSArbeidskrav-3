@@ -7,7 +7,7 @@ namespace EventPlatform.Interfaces;
 /// </summary>
 public interface IReviewable
 {
-    /// <summary>Returns the average star rating (1–5).</summary>
+    /// <summary>Returns the average star rating (1–5) across all reviews.</summary>
     double GetAverageRating();
 
     /// <summary>Returns all reviews for this entity.</summary>
