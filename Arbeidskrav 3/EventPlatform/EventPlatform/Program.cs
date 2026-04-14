@@ -1,6 +1,8 @@
+using System.Globalization;
 using EventPlatform.Data;
 using EventPlatform.Services;
 using EventPlatform.UI.Menus;
+
 
 // Entry point — wires database, services, and menus together.
 
