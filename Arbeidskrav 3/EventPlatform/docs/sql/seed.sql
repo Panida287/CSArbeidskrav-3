@@ -2,9 +2,9 @@
 -- Run after schema.sql.
 
 INSERT INTO Users (Username, PasswordHash) VALUES
-('anna',       '$2a$12$placeholder_hash_anna'),
-('techevents', '$2a$12$placeholder_hash_techevents'),
-('aksel',      '$2a$12$placeholder_hash_aksel');
+('anna',       '100000:78ZXOQB/5j0Zevqa8+TbWg==:39gy77PBhARNFkK4a2DaSxsYJ3CaogIXaVYYZ4mfOf0='),
+('techevents', '100000:kKJUTsv3qxsap39X78D31g==:/dWv0iFwSQL2UsopeeUZiImm3xRY2rJd6T3bllQMG7Y='),
+('aksel',      '100000:m8NC+JIPj22yCHb2Kkfb4w==:xtUdKUYLJRziKnhwfuVLnwHEr4uApJedu/y2YgeTmvI=');
 
 INSERT INTO Events (Title, Description, Type, Category, Date, Venue, OrganiserId, Status) VALUES
 ('Nordic Dev Summit',    'A full-day conference on modern backend development.', 'Conference', 'Technology', '2026-04-15 09:00', 'DogA, Oslo',          2, 'Upcoming'),
