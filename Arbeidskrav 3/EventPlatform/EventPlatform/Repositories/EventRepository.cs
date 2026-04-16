@@ -97,7 +97,14 @@ public class EventRepository
 
         var command = connection.CreateCommand();
         command.CommandText = @"
-            SELECT * FROM Events;
+            SELECT e.*,
+                   c.ConcertId,
+                   conf.ConferanceId,
+                   w.WorkshopId
+            FROM Events e
+            LEFT JOIN Concert c ON e.Id = c.EventId
+            LEFT JOIN Conferance conf ON e.Id = conf.EventId
+            LEFT JOIN Workshop w ON e.Id = w.EventId;
 ";
         using var reader = command.ExecuteReader();
 
