@@ -39,7 +39,24 @@ public class EventRepository
     public bool Update(Event ev) => throw new NotImplementedException();
 
     /// <summary>Updates the status field only.</summary>
-    public bool UpdateStatus(int eventId, string status) => throw new NotImplementedException();
+    public bool UpdateStatus(int eventId, string status)
+    {
+        using var connection = new SQLiteConnection("Data Source=events.db");
+        connection.Open();
+
+        var command = connection.CreateCommand();
+        command.CommandText = @"
+            UPDATE Events
+            SET Status = @status
+            WHERE Id = @id;
+";
+        command.Parameters.AddWithValue("@status", status);
+        command.Parameters.AddWithValue("@id", eventId);
+
+        var rowsAffected = command.ExecuteNonQuery();
+
+        return rowsAffected > 0;
+    }
 
     /// <summary>Returns all events, including related TicketTypes (JOIN).</summary>
     public List<Event> GetAll()
