@@ -36,7 +36,36 @@ public class EventRepository
     }
 
     /// <summary>Updates an existing event record.</summary>
-    public bool Update(Event ev) => throw new NotImplementedException();
+    public bool Update(Event ev)
+    {
+        using var connection = newSQLiteConnection("Data Source=events.db");
+        connection.Open();
+
+        var command = connection.CreateCommand();
+        command.CommandText = @"
+            UPDATE Events
+            SET Title = @title,
+            Description = @description,
+            Type = @type,
+            Category = @category,
+            Date = @date,
+            Venue = @venue
+            WHERE Id = @id;
+";
+        command.Parameters.AddWithValue("@title", ev.Title);
+        command.Parameters.AddWithValue("@description", ev.Description);
+        command.Parameters.AddWithValue("@type", ev.Type);
+        command.Parameters.AddWithValue("@category", ev.category);
+        command.Parameters.AddWithValue("@date", ev.Date);
+        command.Parameters.AddWithValue("@venue", ev.Venue);
+        command.Parameters.AddWithValue("@id", ev.id);
+
+        var rowsAffected = command.ExecutenonQuery();
+
+        return rowsAffected > 0;
+        
+
+    }
 
     /// <summary>Updates the status field only.</summary>
     public bool UpdateStatus(int eventId, string status)
