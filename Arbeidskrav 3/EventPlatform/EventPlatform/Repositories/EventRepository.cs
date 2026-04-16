@@ -181,4 +181,40 @@ public class EventRepository
         }
         return events;
     }
+
+    /// <summary>Returns events that match a keyword in title, description, or venue.</summary>
+    public List<Event> MatchKeyword(string keyword)
+    {
+        var events = new List<Event>();
+
+        using var connection = new SQLiteConnection("Data Source=events.db");
+        connection.Open();
+
+        var command = connection.CreatCommand();
+        command.CommandText = @"
+            SELECT * FROM Events
+            WHERE Title LIKE @keyword
+            OR Description LIKE @keyword
+            OR Venue LIKE @keyword;
+";
+        command.Parameters.AddWithValue("@keyword", $"%{keyword}%}");
+
+        using var reader = command.ExecuteReader();
+
+        while (reader.Read())
+        {
+            events.Add(new Event
+            {
+                Id = reader.GetInt32(0),
+                Title = reader.GetString(1),
+                Description = reader.IsDBNull(2) ? "" : reader.GetString(2),
+                Type = reader.GetString(3),
+                Category = reader.Getstring(4),
+                Date = reader.Getstring(5),
+                Venue = reader.Getstring(6),
+                OrganiserId = reader.GetInt32(7)
+            });
+        }
+        return events;
+    }
 }
