@@ -42,7 +42,36 @@ public class EventRepository
     public bool UpdateStatus(int eventId, string status) => throw new NotImplementedException();
 
     /// <summary>Returns all events, including related TicketTypes (JOIN).</summary>
-    public List<Event> GetAll() => throw new NotImplementedException();
+    public List<Event> GetAll()
+    {
+        var events = new List<Event>();
+
+        using var connection = new SQLiteConnection("Data Source=events.db");
+        connection.Open();
+
+        var command = connection.CreateCommand();
+        command.CommandText = @"
+            SELECT * FROM Events;
+";
+        using var reader = command.ExecuteReader();
+
+        while (reader.Read())
+        {
+            events.Add(new Event
+            {
+                Id = reader.GetInt32(0),
+                Title = reader.GetString(1),
+                Description = reader.IsDBNull(2) ? "" : reader.GetString(2),
+                Type = reader.GetString(3),
+                Category = reader.Getstring(4),
+                Date = reader.Getstring(5),
+                Venue = reader.Getstring(6),
+                OrganiserId = reader.GetInt32(7);
+            }
+        }
+        
+        return events;
+    }
 
     /// <summary>Returns a single event by ID, including TicketTypes, or null.</summary>
     public Event? GetById(int eventId)
@@ -69,7 +98,7 @@ public class EventRepository
             Category = reader.Getstring(4),
             Date = reader.Getstring(5),
             Venue = reader.Getstring(6),
-            OrganiserId = reader.GetInt32(7)
+            OrganiserId = reader.GetInt32(7);
         };
     }
 }
