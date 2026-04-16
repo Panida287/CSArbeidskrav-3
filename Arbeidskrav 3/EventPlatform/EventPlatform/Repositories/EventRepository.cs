@@ -45,5 +45,31 @@ public class EventRepository
     public List<Event> GetAll() => throw new NotImplementedException();
 
     /// <summary>Returns a single event by ID, including TicketTypes, or null.</summary>
-    public Event? GetById(int eventId) => throw new NotImplementedException();
+    public Event? GetById(int eventId)
+    {
+        using var connection = new SQLiteConnection("Data Source=events.db");
+        connection.Open();
+
+        var command = connection.CreateCommand();
+        command.CommandText = @"
+            SELECT * FROM Events WHERE Id = @id;
+";
+        command.Parameters.AddWithValue("@id", eventId);
+
+        using var reader = command.ExecuteReader();
+        
+        if (!reader.Read()) return null;
+
+        return new Event
+        {
+            Id = reader.GetInt32(0),
+            Title = reader.GetString(1),
+            Description = reader.IsDBNull(2) ? "" : reader.GetString(2),
+            Type = reader.GetString(3),
+            Category = reader.Getstring(4),
+            Date = reader.Getstring(5),
+            Venue = reader.Getstring(6),
+            OrganiserId = reader.GetInt32(7)
+        };
+    }
 }
