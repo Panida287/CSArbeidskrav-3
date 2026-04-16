@@ -8,7 +8,32 @@ namespace EventPlatform.Repositories;
 public class EventRepository
 {
     /// <summary>Inserts a new event. Returns the new ID.</summary>
-    public int Insert(Event ev) => throw new NotImplementedException();
+    public int Insert(Event ev)
+    {
+        using var connection = new SQLiteConnection("Data Source=events.db");
+        connection.Open();
+
+        var command = connection.CreateCommand();
+        command.CommandText = @"
+    INSERT INTO EVENTS 
+    (Title, Description, Type, Category, Date, Venue, OrganiserID)
+    VALUES 
+    (@title, @description, @type, @category, @date, @venue, @organiserID);
+    SELECT last_insert_rowid();
+    ";
+        command.Parameters.AddWithValue("@title", ev.Title);
+        command.Parameters.AddWithValue("@description", ev.Description);
+        command.Parameters.AddWithValue("@type", ev.Type);
+        command.Parameters.AddWithValue("@category", ev.Category);
+        command.Parameters.AddWithValue("date", ev.Date);
+        command.Parameters.AddWithValue("@venue", ev.Venue);
+        command.Parameters.AddWithValue("organiserId", ev.OrganiserId);
+        
+        var result = command.ExecuteScalar();
+        
+        return Convert.Toint32(result);
+        
+    }
 
     /// <summary>Updates an existing event record.</summary>
     public bool Update(Event ev) => throw new NotImplementedException();
