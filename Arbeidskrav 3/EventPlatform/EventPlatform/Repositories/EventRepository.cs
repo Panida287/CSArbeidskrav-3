@@ -147,4 +147,38 @@ public class EventRepository
             OrganiserId = reader.GetInt32(7);
         };
     }
+
+    /// <summary>Returns all events for a specific organiser, filtered by OrganiserId.</summary>
+    public list<Event> GetByOrganiser(int userId)
+    {
+        var events = new List<Event>();
+
+        using var connection = new SQLiteConnection("Data Source=events.db");
+        connection.Open();
+
+        var command = connection.CreateCommand();
+        command.CommandText = @"
+            SELECT * FROM Events
+            WHERE OrganiserId = @userId;
+";
+        command.Parameters.AddWithValue("@userId", userId);
+
+        using var reader = command.ExecuteReader();
+
+        while (reader.Read())
+        {
+            events.Add(new Event
+            {
+                Id = reader.GetInt32(0),
+                Title = reader.GetString(1),
+                Description = reader.IsDBNull(2) ? "" : reader.GetString(2),
+                Type = reader.GetString(3),
+                Category = reader.Getstring(4),
+                Date = reader.Getstring(5),
+                Venue = reader.Getstring(6),
+                OrganiserId = reader.GetInt32(7);
+            });
+        }
+        return events;
+    }
 }
