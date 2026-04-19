@@ -19,8 +19,10 @@ public class UserService
     }
 
     /// <summary>Registers a new user. Returns false if username is taken.</summary>
-    public bool Register(string username, string password)
+    public void Register(string username, string password)
     {
+        username = username.Trim();
+        
         if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(password))
             throw new ArgumentException("Username and password cannot be empty.");
 
@@ -28,15 +30,16 @@ public class UserService
             throw new InvalidOperationException("A user with that username already exists.");
 
         string hashedPassword = PasswordHelper.Hash(password);
-        var user = new User { Username = username, PasswordHash = hashedPassword};
+        var user = new User { Username = username, PasswordHash = hashedPassword, CreatedAt = DateTime.UtcNow};
         _userRepository.Insert(user);
-        return true;
 
     }
 
     /// <summary>Logs in a user. Returns false if credentials are invalid.</summary>
-    public bool Login(string username, string password)
+    public void Login(string username, string password)
     {
+        username = username.Trim();
+        
         if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(password))
             throw new ArgumentException("Username and password cannot be empty.");
 
@@ -46,7 +49,6 @@ public class UserService
             throw new UnauthorizedAccessException("Invalid username or password.");
 
         _currentUser = user;
-        return true;
     }
 
     /// <summary>Logs out the current user.</summary>
