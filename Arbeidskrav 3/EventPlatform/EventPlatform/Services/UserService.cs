@@ -18,7 +18,10 @@ public class UserService
         _userRepository = userRepository;
     }
 
-    /// <summary>Registers a new user. Returns false if username is taken.</summary>
+    /// <summary>
+    /// Registers a new user with a hashed password.
+    /// Throws if username or password is empty, or if username is already taken.
+    /// </summary>
     public void Register(string username, string password)
     {
         username = username.Trim();
@@ -35,7 +38,10 @@ public class UserService
 
     }
 
-    /// <summary>Logs in a user. Returns false if credentials are invalid.</summary>
+    /// <summary>
+    /// Logs in a user and stores them as the current session.
+    /// Throws if input is empty or credentials are invalid.
+    /// </summary>
     public void Login(string username, string password)
     {
         username = username.Trim();
