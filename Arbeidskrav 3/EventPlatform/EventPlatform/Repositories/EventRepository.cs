@@ -25,20 +25,20 @@ public class EventRepository
         command.Parameters.AddWithValue("@description", ev.Description);
         command.Parameters.AddWithValue("@type", ev.Type);
         command.Parameters.AddWithValue("@category", ev.Category);
-        command.Parameters.AddWithValue("date", ev.Date);
+        command.Parameters.AddWithValue("@date", ev.Date);
         command.Parameters.AddWithValue("@venue", ev.Venue);
-        command.Parameters.AddWithValue("organiserId", ev.OrganiserId);
+        command.Parameters.AddWithValue("@organiserId", ev.OrganiserId);
         
         var result = command.ExecuteScalar();
         
-        return Convert.Toint32(result);
+        return Convert.ToInt32(result);
         
     }
 
     /// <summary>Updates an existing event record.</summary>
     public bool Update(Event ev)
     {
-        using var connection = newSQLiteConnection("Data Source=events.db");
+        using var connection = new SQLiteConnection("Data Source=events.db");
         connection.Open();
 
         var command = connection.CreateCommand();
@@ -55,12 +55,12 @@ public class EventRepository
         command.Parameters.AddWithValue("@title", ev.Title);
         command.Parameters.AddWithValue("@description", ev.Description);
         command.Parameters.AddWithValue("@type", ev.Type);
-        command.Parameters.AddWithValue("@category", ev.category);
+        command.Parameters.AddWithValue("@category", ev.Category);
         command.Parameters.AddWithValue("@date", ev.Date);
         command.Parameters.AddWithValue("@venue", ev.Venue);
-        command.Parameters.AddWithValue("@id", ev.id);
+        command.Parameters.AddWithValue("@id", ev.Id);
 
-        var rowsAffected = command.ExecutenonQuery();
+        var rowsAffected = command.ExecuteNonQuery();
 
         return rowsAffected > 0;
         
@@ -110,20 +110,50 @@ public class EventRepository
 
         while (reader.Read())
         {
-            events.Add(new Event
+            if (!reader.IsDBNull(8))
             {
+                events.Add(new Concert()
+                {
                 Id = reader.GetInt32(0),
                 Title = reader.GetString(1),
                 Description = reader.IsDBNull(2) ? "" : reader.GetString(2),
                 Type = reader.GetString(3),
-                Category = reader.Getstring(4),
-                Date = reader.Getstring(5),
-                Venue = reader.Getstring(6),
-                OrganiserId = reader.GetInt32(7);
-            }
+                Category = reader.GetString(4),
+                Date = reader.GetString(5),
+                Venue = reader.GetString(6),
+                OrganiserId = reader.GetInt32(7)
+            });
         }
-        
-        return events;
+            else if (!reader.IsDBNull(9))
+            {
+                events.Add(new Conference()
+                {
+                    Id = reader.GetInt32(0),
+                    Title = reader.GetString(1),
+                    Description = reader.IsDBNull(2) ? "" : reader.GetString(2),
+                    Type = reader.GetString(3),
+                    Category = reader.GetString(4),
+                    Date = reader.GetString(5),
+                    Venue = reader.GetString(6),
+                    OrganiserId = reader.GetInt32(7)
+                });
+            }
+            else if (!reader.IsDBNull(10))
+            {
+                events.Add(new Workshop()
+                {
+                    Id = reader.GetInt32(0),
+                    Title = reader.GetString(1),
+                    Description = reader.IsDBNull(2) ? "" : reader.GetString(2),
+                    Type = reader.GetString(3),
+                    Category = reader.GetString(4),
+                    Date = reader.GetString(5),
+                    Venue = reader.GetString(6),
+                    OrganiserId = reader.GetInt32(7)
+                });
+            }
+
+            return events;
     }
 
     /// <summary>Returns a single event by ID, including TicketTypes, or null.</summary>
@@ -148,15 +178,15 @@ public class EventRepository
             Title = reader.GetString(1),
             Description = reader.IsDBNull(2) ? "" : reader.GetString(2),
             Type = reader.GetString(3),
-            Category = reader.Getstring(4),
-            Date = reader.Getstring(5),
-            Venue = reader.Getstring(6),
-            OrganiserId = reader.GetInt32(7);
+            Category = reader.GetString(4),
+            Date = reader.GetString(5),
+            Venue = reader.GetString(6),
+            OrganiserId = reader.GetInt32(7)
         };
     }
 
     /// <summary>Returns all events for a specific organiser, filtered by OrganiserId.</summary>
-    public list<Event> GetByOrganiser(int userId)
+    public List<Event> GetByOrganiser(int userId)
     {
         var events = new List<Event>();
 
@@ -180,10 +210,10 @@ public class EventRepository
                 Title = reader.GetString(1),
                 Description = reader.IsDBNull(2) ? "" : reader.GetString(2),
                 Type = reader.GetString(3),
-                Category = reader.Getstring(4),
-                Date = reader.Getstring(5),
-                Venue = reader.Getstring(6),
-                OrganiserId = reader.GetInt32(7);
+                Category = reader.GetString(4),
+                Date = reader.GetString(5),
+                Venue = reader.GetString(6),
+                OrganiserId = reader.GetInt32(7)
             });
         }
         return events;
@@ -197,14 +227,14 @@ public class EventRepository
         using var connection = new SQLiteConnection("Data Source=events.db");
         connection.Open();
 
-        var command = connection.CreatCommand();
+        var command = connection.CreateCommand();
         command.CommandText = @"
             SELECT * FROM Events
             WHERE Title LIKE @keyword
             OR Description LIKE @keyword
             OR Venue LIKE @keyword;
 ";
-        command.Parameters.AddWithValue("@keyword", $"%{keyword}%}");
+        command.Parameters.AddWithValue("@keyword", $"%{keyword}%");
 
         using var reader = command.ExecuteReader();
 
@@ -216,9 +246,9 @@ public class EventRepository
                 Title = reader.GetString(1),
                 Description = reader.IsDBNull(2) ? "" : reader.GetString(2),
                 Type = reader.GetString(3),
-                Category = reader.Getstring(4),
-                Date = reader.Getstring(5),
-                Venue = reader.Getstring(6),
+                Category = reader.GetString(4),
+                Date = reader.GetString(5),
+                Venue = reader.GetString(6),
                 OrganiserId = reader.GetInt32(7)
             });
         }
