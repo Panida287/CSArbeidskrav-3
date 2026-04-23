@@ -1,3 +1,4 @@
+using Microsoft.Data.Sqlite;
 using EventPlatform.Models.Events;
 
 namespace EventPlatform.Repositories;
