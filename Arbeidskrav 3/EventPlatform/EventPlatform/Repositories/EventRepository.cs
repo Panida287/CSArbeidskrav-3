@@ -164,16 +164,28 @@ public class EventRepository
         connection.Open();
 
         var command = connection.CreateCommand();
-        command.CommandText = @"
-            SELECT * FROM Events WHERE Id = @id;
-";
+        command.CommandText = "@
+            SELECT
+            e.*,
+            c.ConcertId,
+            conf.ConferanceId,
+            w.WorkshopId 
+                FROM Events e
+        LEFT JOIN Concert c ON e.Id = c.EventId
+        LEFT JOIN Conferance conf ON e.Id = conf.EventId
+        LEFT JOIN Workshop w ON e.Id = w.EventId; 
+        ";
+            
         command.Parameters.AddWithValue("@id", eventId);
 
         using var reader = command.ExecuteReader();
         
-        if (!reader.Read()) return null;
-
-        return new Event
+        if (!reader.Read())
+            return null;
+        
+        if (!reader.IsDBNull(8))
+        {
+        return new Concert
         {
             Id = reader.GetInt32(0),
             Title = reader.GetString(1),
@@ -185,6 +197,46 @@ public class EventRepository
             OrganiserId = reader.GetInt32(7)
         };
     }
+        if (!reader.IsDBNull(9))
+        {
+            return new Conference
+            {
+                Id = reader.GetInt32(0),
+                Title = reader.GetString(1),
+                Description = reader.IsDBNull(2) ? "" : reader.GetString(2),
+                Type = reader.GetString(3),
+                Category = reader.GetString(4),
+                Date = reader.GetString(5),
+                Venue = reader.GetString(6),
+                OrganiserId = reader.GetInt32(7)
+            });
+        }
+        if (!reader.IsDBNull(10))
+        {
+            return new Workshop
+            {
+                Id = reader.GetInt32(0),
+                Title = reader.GetString(1),
+                Description = reader.IsDBNull(2) ? "" : reader.GetString(2),
+                Type = reader.GetString(3),
+                Category = reader.GetString(4),
+                Date = reader.GetString(5),
+                Venue = reader.GetString(6),
+                OrganiserId = reader.GetInt32(7)
+            });
+        }
+        
+        return new Event
+        {
+            d = reader.GetInt32(0),
+            Title = reader.GetString(1),
+            Description = reader.IsDBNull(2) ? "" : reader.GetString(2),
+            Type = reader.GetString(3),
+            Category = reader.GetString(4),
+            Date = reader.GetString(5),
+            Venue = reader.GetString(6),
+            OrganiserId = reader.GetInt32(7)
+        }
 
     /// <summary>Returns all events for a specific organiser, filtered by OrganiserId.</summary>
     public List<Event> GetByOrganiser(int userId)
