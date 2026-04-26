@@ -8,10 +8,16 @@ namespace EventPlatform.UI.Menus;
 public class AuthMenu
 {
     private readonly UserService _userService;
+    private readonly EventService _eventService;
+    private readonly BookingService _bookingService;
+    private readonly ReviewService _reviewService;
 
-    public AuthMenu(UserService userService)
+    public AuthMenu(UserService userService, EventService eventService, BookingService bookingService,ReviewService reviewService)
     {
         _userService = userService;
+        _eventService = eventService;
+        _bookingService = bookingService;
+        _reviewService = reviewService;
     }
 
     public void Show()
@@ -90,7 +96,7 @@ public class AuthMenu
             var user = _userService.GetCurrentUser();
             ConsoleHelper.PrintSuccess($"Welcome back, {user!.Username}!");
             ConsoleHelper.PressAnyKeyToContinue();
-            new MainMenu(_userService).Show();
+            new MainMenu(_userService, _eventService, _bookingService, _reviewService).Show();
         }
         catch (Exception e)
         {

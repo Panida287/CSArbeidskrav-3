@@ -15,7 +15,7 @@ var eventService = new EventService();
 var bookingService = new BookingService();
 var reviewService = new ReviewService();
 
-var authMenu = new AuthMenu(userService);
+var authMenu = new AuthMenu(userService, eventService, bookingService, reviewService);
 authMenu.Show();
 
 var mainMenu = new MainMenu(userService);
