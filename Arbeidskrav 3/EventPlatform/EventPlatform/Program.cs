@@ -9,7 +9,7 @@ var db = new AppDatabase("eventplatform.db");
 var seeder = new DatabaseSeeder(db, sqlFolder: "../docs/sql");
 seeder.Seed();
 
-var userRepository = new UserRepository();
+var userRepository = new UserRepository(db);
 var userService = new UserService(userRepository);
 var eventService = new EventService();
 var bookingService = new BookingService();
