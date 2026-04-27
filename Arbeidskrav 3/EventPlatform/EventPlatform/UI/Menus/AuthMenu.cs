@@ -96,7 +96,7 @@ public class AuthMenu
             var user = _userService.GetCurrentUser();
             ConsoleHelper.PrintSuccess($"Welcome back, {user!.Username}!");
             ConsoleHelper.PressAnyKeyToContinue();
-            new MainMenu(_userService).Show();
+            new MainMenu(_userService, _eventService, _bookingService, _reviewService).Show();
         }
         catch (Exception e)
         {
