@@ -344,9 +344,49 @@ public class EventMenu
             ConsoleHelper.PressAnyKeyToContinue();
         }
     }
-    
-    
-    public void ShowDetail(int eventId) => throw new NotImplementedException();
+
+
+    public void ShowDetail(int eventId)
+    {
+        ConsoleHelper.ClearAndPrintHeader("Event Details");
+        ConsoleHelper.PrintDivider();
+
+        try
+        {
+            var e = _eventService.GetById(eventId);
+
+            if (e == null)
+            {
+                ConsoleHelper.PrintError("Event not found.");
+                ConsoleHelper.PressAnyKeyToContinue();
+                return;
+            }
+
+            string tickets = e.Status == EventStatus.Upcoming
+                ? "Available"
+                : "Sold Out";
+
+            Console.WriteLine($"    Title:      {e.Title}");
+            Console.WriteLine($"    Type:       {e.EventType}");
+            Console.WriteLine($"    Category    {e.Category}");
+            Console.WriteLine($"    Date        {e.EventDate:yyyy-MM-dd}");
+            Console.WriteLine($"    Venue       {e.Venue}");
+            Console.WriteLine($"    Description {e.Description}");
+            Console.WriteLine($"    Tickets     {tickets}");
+        }
+        catch (NotImplementedException)
+        {
+            ConsoleHelper.PrintError("Event details are not available yet.");
+            ConsoleHelper.PressAnyKeyToContinue();
+            return;
+        }
+        
+        ConsoleHelper.PrintDivider();
+        Console.WriteLine(" 0. Go back");
+        ConsoleHelper.PrintDivider();
+        Console.Write("Choose an option: ");
+        Console.ReadLine();
+    }
     
     
     public void ShowCreate() => throw new NotImplementedException();
