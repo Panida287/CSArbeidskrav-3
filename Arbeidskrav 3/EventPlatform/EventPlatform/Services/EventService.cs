@@ -32,7 +32,8 @@ public class EventService
         if (newEvent.OrganiserId == 0)
             throw new ArgumentException("Event must have an organiser.");
 
-        return _eventRepository.Insert(newEvent);
+        newEvent.EventId = _eventRepository.Insert(newEvent);
+        return newEvent;
     }
 
     /// <summary>Updates an existing event. Only the organiser may call this.</summary>

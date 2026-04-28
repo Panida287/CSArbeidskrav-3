@@ -11,7 +11,8 @@ seeder.Seed();
 
 var userRepository = new UserRepository(db);
 var userService = new UserService(userRepository);
-var eventService = new EventService();
+var eventRepository = new EventRepository(db);
+var eventService = new EventService(eventRepository);
 var bookingService = new BookingService();
 var reviewService = new ReviewService();
 
