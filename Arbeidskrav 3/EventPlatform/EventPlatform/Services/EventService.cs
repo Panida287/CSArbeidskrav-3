@@ -101,6 +101,7 @@ public class EventService
     /// <returns>Filtered list of upcoming events.</returns>
     public List<Event> SearchEvents(string keyword)
     {
+
         if (string.IsNullOrWhiteSpace(keyword))
             return new List<Event>();
 
@@ -113,5 +114,54 @@ public class EventService
                     || e.Venue.ToLower().Contains(keyword))
             .OrderBy(e => e.EventDate)
             .ToList();
+    }
+}
+
+        var events = GetAll(EventStatus.Upcoming);
+
+        if (string.IsNullOrWhiteSpace(keyword))
+            return events;
+
+        keyword = keyword.ToLower();
+
+        return events
+            .Where(e =>
+                e.Title.ToLower().Contains(keyword) ||
+                e.Description.ToLower().Contains(keyword) ||
+                e.Venue.ToLower().Contains(keyword))
+            .ToList();
+    }
+    
+    /// <summary>Returns all upcoming events in the selected category.</summary>
+    public List<Event> FilterByCategory(EventCategory category)
+    {
+        return GetAll(EventStatus.Upcoming)
+            .Where(e => e.Category == category)
+            .ToList();
+    }
+
+    /// <summary>Returns all upcoming events of the selected type.</summary>
+    public List<Event> FilterByType(string type)
+    {
+        if (string.IsNullOrWhiteSpace(type))
+            return GetAll(EventStatus.Upcoming);
+        
+        return GetAll(EventStatus.Upcoming)
+            .Where(e => e.Type.ToLower() == type.ToLower())
+            .ToList();
+    }
+
+    /// <summary>Returns all upcoming events matching the selected keyword, category and type.</summary>
+    public List<Event> FilterEvents(string keyword, EventCategory? category, string? type)
+    {
+        var events = SearchEvents(keyword);
+
+        if (category.HasValue)
+            events = events.Where(e => e.Category == category.Value).ToList();
+
+        if (!string.IsNullOrWhiteSpace(type))
+            events = events.Where(e => e.Type.ToLower() == type.ToLower()).ToList();
+
+        return events;
     }
 }
