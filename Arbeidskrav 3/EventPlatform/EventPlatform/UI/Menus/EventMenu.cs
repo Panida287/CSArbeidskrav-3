@@ -1,6 +1,7 @@
 using EventPlatform.Services;
 using EventPlatform.Enums;
 using EventPlatform.Models.Events;
+using System.Linq;
 
 namespace EventPlatform.UI.Menus;
 
@@ -158,11 +159,198 @@ public class EventMenu
             }
         }
     }
+
+    public void ShowFilter()
+    {
+        while (true)
+        {
+            ConsoleHelper.ClearAndPrintHeader("Filter Events");
+            ConsoleHelper.PrintDivider();
+            Console.WriteLine(" 1. Filter by Category");
+            Console.WriteLine(" 2. Filter by Type");
+            Console.WriteLine(" 0. Go back");
+            ConsoleHelper.PrintDivider();
+            Console.Write("Choose an option: ");
+
+            string choice = Console.ReadLine() ?? "";
+            
+            if (choice == "0") return;
+
+            if (choice == "1")
+            {
+                ShowFilterByCategory();
+            }
+            else if (choice == "2")
+            {
+                ShowFilterByType();
+            }
+            else
+            {
+                ConsoleHelper.PrintError("Invalid option. Please try again.");
+                ConsoleHelper.PressAnyKeyToContinue();
+            }
+        }
+    }
+
+    private void ShowFilterByCategory()
+    {
+        ConsoleHelper.ClearAndPrintHeader("Filter by Category");
+        ConsoleHelper.PrintDivider();
+        Console.WriteLine(" 1. Music");
+        Console.WriteLine(" 2. Technology");
+        Console.WriteLine(" 3. Arts");
+        Console.WriteLine(" 4. Food");
+        Console.WriteLine(" 5. Sports");
+        Console.WriteLine(" 6. Education");
+        Console.WriteLine(" 7. Other");
+        Console.WriteLine(" 0. Go back");
+        ConsoleHelper.PrintDivider();
+        Console.Write("Choose a category: ");
+        
+        string input = Console.ReadLine() ?? "";
+
+        EventCategory? selected = input switch
+        {
+            "1" => EventCategory.Music,
+            "2" => EventCategory.Technology,
+            "3" => EventCategory.Arts,
+            "4" => EventCategory.Food,
+            "5" => EventCategory.Sports,
+            "6" => EventCategory.Education,
+            "7" => EventCategory.Other,
+            _ => null
+        };
+        
+        if (input == "0") return;
+        if (selected == null)
+        {
+            ConsoleHelper.PrintError("Invalid option. Please try again.");
+            ConsoleHelper.PressAnyKeyToContinue();
+            return;
+        }
+
+        try
+        {
+            var events = _eventService.GetAll()
+                .Where(e => e.Category == selected)
+                .ToList();
+            
+            ConsoleHelper.ClearAndPrintHeader($"Events: {selected}");
+            ConsoleHelper.PrintDivider();
+
+            if (events.Count == 0)
+            {
+                ConsoleHelper.PrintError("No events found for this category.");
+                ConsoleHelper.PressAnyKeyToContinue();
+                return;
+            }
+            
+            PrintEventTable(events);
+            ConsoleHelper.PrintDivider();
+            Console.WriteLine(" 0. Go back");
+            ConsoleHelper.PrintDivider();
+            Console.Write("Select event number to view details: ");
+
+            string choice = Console.ReadLine() ?? "";
+            if (choice == "0") return;
+            
+            if (int.TryParse(choice, out int eventChoice) &&
+                eventChoice >= 1 && eventChoice <= events.Count)
+            {
+                ShowDetail(events[eventChoice - 1].EventId);
+            }
+            else
+            {
+                ConsoleHelper.PrintError("Invalid selection.");
+                ConsoleHelper.PressAnyKeyToContinue();
+            }
+        }
+        catch (NotImplementedException)
+        {
+            ConsoleHelper.PrintError("Filter is not available yet.");
+            ConsoleHelper.PressAnyKeyToContinue();
+        }
+    }
+
+    private void ShowFilterByType()
+    {
+        ConsoleHelper.ClearAndPrintHeader("Filter by Type");
+        ConsoleHelper.PrintDivider();
+        Console.WriteLine(" 1. Concert");
+        Console.WriteLine(" 2. Conference");
+        Console.WriteLine(" 3. Workshop");
+        Console.WriteLine(" 0. Go back");
+        ConsoleHelper.PrintDivider();
+        Console.Write("Choose a type: ");
+
+        string input = Console.ReadLine() ?? "";
+        
+        if (input == "0") return;
+
+        string? selectedType = input switch
+        {
+            "1" => "Concert",
+            "2" => "Conference",
+            "3" => "Workshop",
+            _ => null
+        };
+
+        if (selectedType == null)
+        {
+            ConsoleHelper.PrintError("Invalid option. Please try again.");
+            ConsoleHelper.PressAnyKeyToContinue();
+            return;
+        }
+
+        try
+        {
+            var events = _eventService.GetAll()
+                .Where(e => e.EventType == selectedType)
+                .ToList();
+            
+            ConsoleHelper.ClearAndPrintHeader($"Events: {selectedType}");
+            ConsoleHelper.PrintDivider();
+
+            if (events.Count == 0)
+            {
+                ConsoleHelper.PrintError("No events found for this type.");
+                ConsoleHelper.PressAnyKeyToContinue();
+                return;
+            }
+            
+            PrintEventTable(events);
+            ConsoleHelper.PrintDivider();
+            Console.WriteLine(" 0. Go back");
+            ConsoleHelper.PrintDivider();
+            Console.Write("Select event number to view details: ");
+
+            string choice = Console.ReadLine() ?? "";
+            if (choice == "0") return;
+            
+            if (int.TryParse(choice, out int eventChoice) &&
+                eventChoice >= 1 && eventChoice <= events.Count)
+            {
+                ShowDetail(events[eventChoice - 1].EventId);
+            }
+            else
+            {
+                ConsoleHelper.PrintError("Invalid selection.");
+                ConsoleHelper.PressAnyKeyToContinue();
+            }
+        }
+        catch (NotImplementedException)
+        {
+            ConsoleHelper.PrintError("Filter is not available yet.");
+            ConsoleHelper.PressAnyKeyToContinue();
+        }
+    }
     
     
-    
-    public void ShowFilter() => throw new NotImplementedException();
     public void ShowDetail(int eventId) => throw new NotImplementedException();
+    
+    
     public void ShowCreate() => throw new NotImplementedException();
+    
+    
     public void ShowMyEvents() => throw new NotImplementedException();
 }
