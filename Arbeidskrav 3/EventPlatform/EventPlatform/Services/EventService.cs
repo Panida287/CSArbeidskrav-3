@@ -1,5 +1,6 @@
 using EventPlatform.Models.Events;
 using EventPlatform.Enums;
+using EventPlatform.Repositories;
 
 namespace EventPlatform.Services;
 
@@ -9,25 +10,107 @@ namespace EventPlatform.Services;
 /// </summary>
 public class EventService
 {
+    private readonly EventRepository _eventRepository;
+
+    public EventService(EventRepository eventRepository)
+    {
+        _eventRepository = eventRepository;
+    }
+
     /// <summary>Creates a new event owned by the given organiser.</summary>
-    public Event Create(Event newEvent) => throw new NotImplementedException();
+    public Event Create(Event newEvent)
+    {
+        if (string.IsNullOrWhiteSpace(newEvent.Title))
+            throw new ArgumentException("Title cannot be empty.");
+
+        if (string.IsNullOrWhiteSpace(newEvent.Venue))
+            throw new ArgumentException("Venue cannot be empty.");
+
+        if (newEvent.EventDate <= DateTime.UtcNow)
+            throw new ArgumentException("Event date must be in the future.");
+
+        if (newEvent.OrganiserId == 0)
+            throw new ArgumentException("Event must have an organiser.");
+
+        return _eventRepository.Insert(newEvent);
+    }
 
     /// <summary>Updates an existing event. Only the organiser may call this.</summary>
-    public bool Edit(Event updatedEvent, int requestingUserId) => throw new NotImplementedException();
+    public bool Edit(Event updatedEvent, int requestingUserId)
+    {
+        var existingEvent = _eventRepository.GetById(updatedEvent.EventId);
+
+        if (existingEvent == null)
+            return false;
+
+        if (requestingUserId != existingEvent.OrganiserId)
+            return false;
+
+        if (string.IsNullOrWhiteSpace(updatedEvent.Title))
+            return false;
+
+        if (string.IsNullOrWhiteSpace(updatedEvent.Venue))
+            return false;
+
+        if (updatedEvent.EventDate <= DateTime.UtcNow)
+            return false;
+
+        _eventRepository.Update(updatedEvent);
+
+        return true;
+    }
 
     /// <summary>Cancels an event. Only the organiser may call this.</summary>
-    public bool Cancel(int eventId, int requestingUserId) => throw new NotImplementedException();
+    public bool Cancel(int eventId, int requestingUserId)
+    {
+        var existingEvent = _eventRepository.GetById(eventId);
+
+        if (existingEvent == null)
+            return false;
+
+        if (requestingUserId != existingEvent.OrganiserId)
+            return false;
+
+        _eventRepository.UpdateStatus(eventId, EventStatus.Cancelled);
+
+        return true;
+    }
 
     /// <summary>Returns all events, optionally filtered by status.</summary>
-    public List<Event> GetAll(EventStatus? statusFilter = null) => throw new NotImplementedException();
+    public List<Event> GetAll(EventStatus? statusFilter = null)
+    {
+        var events = _eventRepository.GetAll();
+
+        if (statusFilter.HasValue)
+            events = events.Where(e => e.Status == statusFilter.Value).ToList();
+
+        return events.OrderBy(e => e.EventDate).ToList();
+    }
 
     /// <summary>Returns a single event by ID, or null if not found.</summary>
-    public Event? GetById(int eventId) => throw new NotImplementedException();
+        public Event? GetById(int eventId)
+    {
+        return _eventRepository.GetById(eventId);
+    }
 
     /// <summary>
     /// Returns all upcoming events matching the given keyword.
     /// </summary>
     /// <param name="keyword">Case-insensitive search term.</param>
     /// <returns>Filtered list of upcoming events.</returns>
-    public List<Event> SearchEvents(string keyword) => throw new NotImplementedException();
+    public List<Event> SearchEvents(string keyword)
+    {
+        if (string.IsNullOrWhiteSpace(keyword))
+            return new List<Event>();
+
+        keyword = keyword.ToLower();
+
+        return _eventRepository.GetAll()
+            .Where(e => e.EventDate > DateTime.UtcNow)
+            .Where(e => e.Title.ToLower().Contains(keyword)
+                    || e.Description.ToLower().Contains(keyword)
+                    || e.Venue.ToLower().Contains(keyword))
+            .OrderBy(e => e.EventDate)
+            .ToList();
+    }
 }
