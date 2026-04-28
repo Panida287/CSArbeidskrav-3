@@ -30,7 +30,9 @@ public class EventMenu
 
             try
             {
-                events = _eventService.GetAll();
+                events = _eventService.GetAll()
+                    .OrderBy(e => e.EventDate)
+                    .ToList();
             }
             catch (NotImplementedException)
             {
