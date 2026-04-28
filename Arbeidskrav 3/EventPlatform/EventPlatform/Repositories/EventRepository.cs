@@ -10,7 +10,7 @@ public class EventRepository
     /// <summary>Inserts a new event. Returns the new ID.</summary>
     public int Insert(Event ev)
     {
-        using var connection = new SQLiteConnection("Data Source=events.db");
+        using var connection = new SqliteConnection("Data Source=eventplatform.db");
         connection.Open();
 
         var command = connection.CreateCommand();
@@ -38,7 +38,7 @@ public class EventRepository
     /// <summary>Updates an existing event record.</summary>
     public bool Update(Event ev)
     {
-        using var connection = newSQLiteConnection("Data Source=events.db");
+        using var connection = new SqliteConnection("Data Source=eventplatform.db");
         connection.Open();
 
         var command = connection.CreateCommand();
@@ -70,7 +70,7 @@ public class EventRepository
     /// <summary>Updates the status field only.</summary>
     public bool UpdateStatus(int eventId, string status)
     {
-        using var connection = new SQLiteConnection("Data Source=events.db");
+        using var connection = new SqliteConnection("Data Source=eventplatform.db");
         connection.Open();
 
         var command = connection.CreateCommand();
@@ -92,7 +92,7 @@ public class EventRepository
     {
         var events = new List<Event>();
 
-        using var connection = new SQLiteConnection("Data Source=events.db");
+        using var connection = new SqliteConnection("Data Source=eventplatform.db");
         connection.Open();
 
         var command = connection.CreateCommand();
@@ -129,7 +129,7 @@ public class EventRepository
     /// <summary>Returns a single event by ID, including TicketTypes, or null.</summary>
     public Event? GetById(int eventId)
     {
-        using var connection = new SQLiteConnection("Data Source=events.db");
+        using var connection = new SqliteConnection("Data Source=eventplatform.db");
         connection.Open();
 
         var command = connection.CreateCommand();
@@ -160,7 +160,7 @@ public class EventRepository
     {
         var events = new List<Event>();
 
-        using var connection = new SQLiteConnection("Data Source=events.db");
+        using var connection = new SqliteConnection("Data Source=eventplatform.db");
         connection.Open();
 
         var command = connection.CreateCommand();
@@ -194,7 +194,7 @@ public class EventRepository
     {
         var events = new List<Event>();
 
-        using var connection = new SQLiteConnection("Data Source=events.db");
+        using var connection = new SqliteConnection("Data Source=eventplatform.db");
         connection.Open();
 
         var command = connection.CreatCommand();
