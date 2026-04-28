@@ -1,4 +1,6 @@
 using EventPlatform.Services;
+using EventPlatform.Enums;
+using EventPlatform.Models.Events;
 
 namespace EventPlatform.UI.Menus;
 
@@ -16,8 +18,92 @@ public class EventMenu
         _userService = userService;
     }
 
-    public void ShowBrowse() => throw new NotImplementedException();
-    public void ShowSearch() => throw new NotImplementedException();
+    public void ShowBrowse()
+    {
+        while (true)
+        {
+            ConsoleHelper.ClearAndPrintHeader("Browse Events");
+            ConsoleHelper.PrintDivider();
+
+            List<Event> events;
+
+            try
+            {
+                events = _eventService.GetAll();
+            }
+            catch (NotImplementedException)
+            {
+                ConsoleHelper.PrintError("Browse Events is not available yet.");
+                ConsoleHelper.PressAnyKeyToContinue();
+                return;
+            }
+
+            if (events.Count == 0)
+            {
+                ConsoleHelper.PrintError("No events found.");
+                ConsoleHelper.PressAnyKeyToContinue();
+                return;
+            }
+
+            PrintEventTable(events);
+            
+            ConsoleHelper.PrintDivider();
+            Console.WriteLine(" 0. Go back");
+            ConsoleHelper.PrintDivider();
+            Console.Write("Select event number to view details: ");
+
+            string input = Console.ReadLine() ?? "";
+            
+            if (input == "0") return;
+
+            if (int.TryParse(input, out int choice) && choice >= 1 && choice <= events.Count)
+            {
+                ShowDetail(events[choice - 1].EventId);
+            }
+            else
+            {
+                ConsoleHelper.PrintError("Invalid selection. Please try again.");
+                ConsoleHelper.PressAnyKeyToContinue();
+            }
+        }
+    }
+
+    private void PrintEventTable(List<Event> events)
+    {
+        //Print column headers
+        Console.WriteLine(
+            " #".PadRight(4) +
+            "Title".PadRight(26) +
+            "Type".PadRight(14) +
+            "Date".PadRight(14) +
+            "Tickets"
+            );
+        ConsoleHelper.PrintDivider();
+        
+        //Print each event as a row
+        for (int i = 0; i < events.Count; i++)
+        {
+            var e = events[i];
+            string tickets = e.Status == EventStatus.Upcoming ? "Available" : "Sold Out";
+            string date = e.EventDate.ToString("yyyy-MM-dd");
+
+            Console.WriteLine(
+                $" {i + 1}".PadRight(4) +
+                e.Title.PadRight(26) +
+                e.EventType.PadRight(14) +
+                date.PadRight(14) +
+                tickets
+                );
+        }
+    }
+
+    public void ShowSearch()
+    {
+        
+    }
+    
+    
+    
     public void ShowFilter() => throw new NotImplementedException();
     public void ShowDetail(int eventId) => throw new NotImplementedException();
     public void ShowCreate() => throw new NotImplementedException();
