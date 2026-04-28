@@ -41,8 +41,9 @@ public class ReviewRepository
 
         var command = connection.CreateCommand();
         command.CommandText = @"
-            SELECT * FROM Reviews 
-            WHERE EventId = @eventId;
+            SELECT ReviewId, BookingId, EventId, UserId, Rating, Comment
+            FROM Reviews 
+            WHERE EventId = @eventId
 ";
         command.Parameters.AddWithValue("@eventId", eventId);
 
@@ -52,7 +53,7 @@ public class ReviewRepository
         {
             reviews.Add(new Review
             {
-                Id = reader.GetInt32(0),
+                ReviewId = reader.GetInt32(0),
                 BookingId = reader.GetInt32(1),
                 EventId = reader.GetInt32(2),
                 UserId = reader.GetInt32(3),
