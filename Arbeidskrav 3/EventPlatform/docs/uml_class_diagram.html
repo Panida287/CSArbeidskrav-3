@@ -1,0 +1,191 @@
+
+<style>
+.uml { font-family: var(--font-mono, monospace); font-size: 11px; }
+.cls-box { border-radius: 4px; overflow: hidden; position: absolute; }
+.cls-head { padding: 4px 8px; font-size: 11px; font-weight: 600; text-align: center; }
+.cls-stereotype { font-size: 9px; font-weight: 400; opacity: 0.8; display: block; }
+.cls-body { padding: 4px 8px; font-size: 10px; line-height: 1.6; }
+.cls-divider { height: 1px; }
+svg.arrows { position: absolute; top: 0; left: 0; pointer-events: none; overflow: visible; }
+.wrap { position: relative; width: 680px; height: 980px; margin: 0 auto; }
+
+.purple-head { background: #AFA9EC; color: #26215C; }
+.purple-body { background: #EEEDFE; color: #3C3489; border: 1px solid #AFA9EC; border-top: none; }
+.purple-div  { background: #AFA9EC; }
+
+.coral-head  { background: #F0997B; color: #4A1B0C; }
+.coral-body  { background: #FAECE7; color: #712B13; border: 1px solid #F0997B; border-top: none; }
+.coral-div   { background: #F0997B; }
+
+.teal-head   { background: #5DCAA5; color: #04342C; }
+.teal-body   { background: #E1F5EE; color: #085041; border: 1px solid #5DCAA5; border-top: none; }
+.teal-div    { background: #5DCAA5; }
+
+.blue-head   { background: #85B7EB; color: #042C53; }
+.blue-body   { background: #E6F1FB; color: #0C447C; border: 1px solid #85B7EB; border-top: none; }
+.blue-div    { background: #85B7EB; }
+
+.gray-head   { background: #B4B2A9; color: #2C2C2A; }
+.gray-body   { background: #F1EFE8; color: #444441; border: 1px solid #B4B2A9; border-top: none; }
+.gray-div    { background: #B4B2A9; }
+
+.legend-row  { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; font-size: 11px; color: var(--color-text-secondary); }
+</style>
+
+<div class="wrap">
+
+  <!-- IReviewable -->
+  <div class="cls-box" style="left:20px;top:20px;width:175px;">
+    <div class="cls-head teal-head"><span class="cls-stereotype">«interface»</span>IReviewable</div>
+    <div class="cls-divider teal-div"></div>
+    <div class="cls-body teal-body">+ GetAverageRating()<br>+ GetReviews()</div>
+  </div>
+
+  <!-- ISearchable -->
+  <div class="cls-box" style="left:485px;top:20px;width:175px;">
+    <div class="cls-head teal-head"><span class="cls-stereotype">«interface»</span>ISearchable</div>
+    <div class="cls-divider teal-div"></div>
+    <div class="cls-body teal-body">+ MatchesKeyword(keyword)</div>
+  </div>
+
+  <!-- Event (abstract) -->
+  <div class="cls-box" style="left:215px;top:160px;width:250px;">
+    <div class="cls-head purple-head"><span class="cls-stereotype">«abstract»</span><em>Event</em></div>
+    <div class="cls-divider purple-div"></div>
+    <div class="cls-body purple-body">
+      # EventId : int<br>
+      # OrganiserId : int<br>
+      # Title : string<br>
+      # Description : string<br>
+      # EventType : string<br>
+      # Category : EventCategory<br>
+      # EventDate : DateTime<br>
+      # Venue : string<br>
+      # Status : EventStatus
+    </div>
+  </div>
+
+  <!-- Concert -->
+  <div class="cls-box" style="left:20px;top:430px;width:175px;">
+    <div class="cls-head coral-head">Concert</div>
+    <div class="cls-divider coral-div"></div>
+    <div class="cls-body coral-body">+ Performer : string<br>+ Genre : string</div>
+  </div>
+
+  <!-- Conference -->
+  <div class="cls-box" style="left:252px;top:430px;width:175px;">
+    <div class="cls-head coral-head">Conference</div>
+    <div class="cls-divider coral-div"></div>
+    <div class="cls-body coral-body">+ SpeakerList : List&lt;string&gt;<br>+ SessionSchedule : string</div>
+  </div>
+
+  <!-- Workshop -->
+  <div class="cls-box" style="left:485px;top:430px;width:175px;">
+    <div class="cls-head coral-head">Workshop</div>
+    <div class="cls-divider coral-div"></div>
+    <div class="cls-body coral-body">+ RequiredMaterials : string<br>+ MaxParticipants : int</div>
+  </div>
+
+  <!-- User -->
+  <div class="cls-box" style="left:20px;top:590px;width:175px;">
+    <div class="cls-head blue-head">User</div>
+    <div class="cls-divider blue-div"></div>
+    <div class="cls-body blue-body">+ UserId : int<br>+ Username : string<br>+ PasswordHash : string<br>+ CreatedAt : DateTime</div>
+  </div>
+
+  <!-- TicketType -->
+  <div class="cls-box" style="left:252px;top:590px;width:175px;">
+    <div class="cls-head blue-head">TicketType</div>
+    <div class="cls-divider blue-div"></div>
+    <div class="cls-body blue-body">+ TicketTypeId : int<br>+ EventId : int<br>+ Name : string<br>+ Price : decimal<br>+ TotalQuantity : int<br>+ Remaining : int</div>
+  </div>
+
+  <!-- Booking -->
+  <div class="cls-box" style="left:485px;top:590px;width:175px;">
+    <div class="cls-head blue-head">Booking</div>
+    <div class="cls-divider blue-div"></div>
+    <div class="cls-body blue-body">+ BookingId : int<br>+ UserId : int<br>+ EventId : int<br>+ TicketTypeId : int<br>+ PriceAtBooking : decimal<br>+ BookingDate : DateTime<br>+ Status : BookingStatus</div>
+  </div>
+
+  <!-- Review -->
+  <div class="cls-box" style="left:252px;top:800px;width:175px;">
+    <div class="cls-head blue-head">Review</div>
+    <div class="cls-divider blue-div"></div>
+    <div class="cls-body blue-body">+ ReviewId : int<br>+ BookingId : int<br>+ UserId : int<br>+ EventId : int<br>+ Rating : int<br>+ Comment : string</div>
+  </div>
+
+  <!-- EventCategory enum -->
+  <div class="cls-box" style="left:20px;top:800px;width:175px;">
+    <div class="cls-head gray-head"><span class="cls-stereotype">«enum»</span>EventCategory</div>
+    <div class="cls-divider gray-div"></div>
+    <div class="cls-body gray-body">Music<br>Technology<br>Arts · Food<br>Sports · Education<br>Other</div>
+  </div>
+
+  <!-- EventStatus enum -->
+  <div class="cls-box" style="left:485px;top:800px;width:175px;">
+    <div class="cls-head gray-head"><span class="cls-stereotype">«enum»</span>EventStatus</div>
+    <div class="cls-divider gray-div"></div>
+    <div class="cls-body gray-body">Upcoming<br>Completed<br>Cancelled</div>
+  </div>
+
+  <!-- BookingStatus enum -->
+  <div class="cls-box" style="left:485px;top:900px;width:175px;">
+    <div class="cls-head gray-head"><span class="cls-stereotype">«enum»</span>BookingStatus</div>
+    <div class="cls-divider gray-div"></div>
+    <div class="cls-body gray-body">Confirmed<br>Cancelled</div>
+  </div>
+
+  <!-- SVG arrows layer -->
+  <svg class="arrows" width="680" height="980">
+    <defs>
+      <marker id="hollow" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="10" markerHeight="10" orient="auto-start-reverse">
+        <path d="M1 1L10 6L1 11Z" fill="none" stroke="#888780" stroke-width="1.5"/>
+      </marker>
+      <marker id="filled" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+        <path d="M0 0L10 5L0 10Z" fill="#888780"/>
+      </marker>
+    </defs>
+
+    <!-- Event implements IReviewable (dashed + hollow) -->
+    <line x1="270" y1="160" x2="130" y2="95" stroke="#888780" stroke-width="1" stroke-dasharray="5 3" marker-end="url(#hollow)"/>
+    <!-- Event implements ISearchable (dashed + hollow) -->
+    <line x1="410" y1="160" x2="535" y2="58" stroke="#888780" stroke-width="1" stroke-dasharray="5 3" marker-end="url(#hollow)"/>
+
+    <!-- Concert inherits Event (solid + hollow) -->
+    <path d="M107 430 L107 390 L340 390 L340 360" fill="none" stroke="#888780" stroke-width="1.5" marker-end="url(#hollow)"/>
+    <!-- Conference inherits Event (solid + hollow) -->
+    <line x1="340" y1="430" x2="340" y2="360" stroke="#888780" stroke-width="1.5" marker-end="url(#hollow)"/>
+    <!-- Workshop inherits Event (solid + hollow) -->
+    <path d="M572 430 L572 390 L340 390 L340 360" fill="none" stroke="#888780" stroke-width="1.5" marker-end="url(#hollow)"/>
+
+    <!-- TicketType -> Event (association, dashed filled) -->
+    <line x1="340" y1="590" x2="340" y2="360" stroke="#B4B2A9" stroke-width="1" stroke-dasharray="3 3" marker-end="url(#filled)"/>
+
+    <!-- Booking -> User (association) -->
+    <line x1="485" y1="630" x2="195" y2="630" stroke="#B4B2A9" stroke-width="1" stroke-dasharray="3 3" marker-end="url(#filled)"/>
+
+    <!-- Booking -> TicketType (association) -->
+    <line x1="485" y1="650" x2="427" y2="650" stroke="#B4B2A9" stroke-width="1" stroke-dasharray="3 3" marker-end="url(#filled)"/>
+
+    <!-- Review -> Booking (association) -->
+    <path d="M427 830 L460 830 L460 720 L485 720" fill="none" stroke="#B4B2A9" stroke-width="1" stroke-dasharray="3 3" marker-end="url(#filled)"/>
+  </svg>
+
+  <!-- Legend -->
+  <div style="position:absolute;left:20px;top:910px;padding:10px 14px;border:1px solid var(--color-border-tertiary);border-radius:4px;background:var(--color-background-secondary);">
+    <div style="font-size:11px;font-weight:600;color:var(--color-text-primary);margin-bottom:8px;">Legend</div>
+    <div class="legend-row">
+      <svg width="40" height="12"><line x1="0" y1="6" x2="30" y2="6" stroke="#888780" stroke-width="1.5" marker-end="url(#hollow)"/></svg>
+      Inheritance (extends)
+    </div>
+    <div class="legend-row">
+      <svg width="40" height="12"><line x1="0" y1="6" x2="30" y2="6" stroke="#888780" stroke-width="1" stroke-dasharray="5 3" marker-end="url(#hollow)"/></svg>
+      Interface implementation
+    </div>
+    <div class="legend-row">
+      <svg width="40" height="12"><line x1="0" y1="6" x2="30" y2="6" stroke="#B4B2A9" stroke-width="1" stroke-dasharray="3 3" marker-end="url(#filled)"/></svg>
+      Association
+    </div>
+  </div>
+
+</div>
