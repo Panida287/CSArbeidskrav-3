@@ -1,4 +1,5 @@
 using EventPlatform.Services;
+using System;
 
 namespace EventPlatform.UI.Menus;
 
@@ -44,7 +45,7 @@ public class MainMenu
                 case "1":
                     try
                     {
-                        new EventMenu(_eventService, _userService).ShowBrowse();
+                        new EventMenu(_eventService, _userService, _bookingService, _reviewService).ShowBrowse();
                     }
                     catch (NotImplementedException)
                     {
@@ -56,7 +57,7 @@ public class MainMenu
                 case "2":
                     try
                     {
-                        new EventMenu(_eventService, _userService).ShowSearch();
+                        new EventMenu(_eventService, _userService, _bookingService, _reviewService).ShowSearch();
                     }
                     catch (NotImplementedException)
                     {
@@ -80,7 +81,7 @@ public class MainMenu
                 case "4":
                     try
                     {
-                        new EventMenu(_eventService, _userService).ShowCreate();
+                        new EventMenu(_eventService, _userService, _bookingService, _reviewService).ShowCreate();
 
                     }
                     catch (NotImplementedException)
@@ -93,7 +94,7 @@ public class MainMenu
                 case "5":
                     try
                     {
-                        new EventMenu(_eventService, _userService).ShowMyEvents();
+                        new EventMenu(_eventService, _userService, _bookingService, _reviewService).ShowMyEvents();
                     }
                     catch (NotImplementedException)
                     {

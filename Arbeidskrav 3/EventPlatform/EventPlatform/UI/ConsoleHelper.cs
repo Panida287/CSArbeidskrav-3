@@ -1,3 +1,5 @@
+using System;
+
 namespace EventPlatform.UI;
 
 /// <summary>
