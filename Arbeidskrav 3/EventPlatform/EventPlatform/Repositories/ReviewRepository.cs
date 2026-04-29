@@ -49,7 +49,7 @@ public class ReviewRepository
 
         using var reader = command.ExecuteReader();
         
-        While (reader.Read())
+        while (reader.Read())
         {
             reviews.Add(new Review
             {
