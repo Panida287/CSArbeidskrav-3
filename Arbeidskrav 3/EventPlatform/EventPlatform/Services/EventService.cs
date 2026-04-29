@@ -89,16 +89,12 @@ public class EventService
     }
 
     /// <summary>Returns a single event by ID, or null if not found.</summary>
-        public Event? GetById(int eventId)
+    public Event? GetById(int eventId)
     {
         return _eventRepository.GetById(eventId);
     }
 
-    /// <summary>
-    /// Returns all upcoming events matching the given keyword.
-    /// </summary>
-    /// <param name="keyword">Case-insensitive search term.</param>
-    /// <returns>Filtered list of upcoming events.</returns>
+    /// <summary>Returns all upcoming events matching the given keyword.</summary>
     public List<Event> SearchEvents(string keyword)
     {
         if (string.IsNullOrWhiteSpace(keyword))
@@ -113,5 +109,38 @@ public class EventService
                     || e.Venue.ToLower().Contains(keyword))
             .OrderBy(e => e.EventDate)
             .ToList();
+    }
+
+    /// <summary>Returns all upcoming events in the selected category.</summary>
+    public List<Event> FilterByCategory(EventCategory category)
+    {
+        return GetAll(EventStatus.Upcoming)
+            .Where(e => e.Category == category)
+            .ToList();
+    }
+
+    /// <summary>Returns all upcoming events of the selected type.</summary>
+    public List<Event> FilterByType(string type)
+    {
+        if (string.IsNullOrWhiteSpace(type))
+            return GetAll(EventStatus.Upcoming);
+
+        return GetAll(EventStatus.Upcoming)
+            .Where(e => e.EventType.ToLower() == type.ToLower())
+            .ToList();
+    }
+
+    /// <summary>Returns all upcoming events matching the selected keyword, category and type.</summary>
+    public List<Event> FilterEvents(string keyword, EventCategory? category, string? type)
+    {
+        var events = SearchEvents(keyword);
+
+        if (category.HasValue)
+            events = events.Where(e => e.Category == category.Value).ToList();
+
+        if (!string.IsNullOrWhiteSpace(type))
+            events = events.Where(e => e.EventType.ToLower() == type.ToLower()).ToList();
+
+        return events;
     }
 }
