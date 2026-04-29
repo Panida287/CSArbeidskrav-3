@@ -2,7 +2,8 @@ using EventPlatform.Services;
 using EventPlatform.Enums;
 using EventPlatform.Models;
 using EventPlatform.Models.Events;
-using System.Linq;
+using System;
+using System.Collections.Generic;
 
 namespace EventPlatform.UI.Menus;
 
