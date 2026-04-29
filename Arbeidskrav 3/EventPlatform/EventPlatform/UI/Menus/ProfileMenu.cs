@@ -37,7 +37,7 @@ public class ProfileMenu
 
     private void ShowOrganisedEvents(int userId)
     {
-        ConsoleHelper.PrintHeader("Events I Organise");
+        Console.WriteLine("Events I Organise");
         ConsoleHelper.PrintDivider();
 
         try
@@ -85,7 +85,7 @@ public class ProfileMenu
 
     private void ShowReceivedReviews(int userId)
     {
-        ConsoleHelper.PrintHeader("Reviews I Have Received");
+        Console.WriteLine("Reviews I Have Received");
         ConsoleHelper.PrintDivider();
 
         try
