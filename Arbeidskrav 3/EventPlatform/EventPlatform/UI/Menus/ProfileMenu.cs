@@ -28,7 +28,6 @@ public class ProfileMenu
         ShowOrganisedEvents(user.UserId);
         ShowReceivedReviews(user.UserId);
         
-        ConsoleHelper.PrintDivider();
         Console.WriteLine(" 0. Go back");
         ConsoleHelper.PrintDivider();
         Console.Write("Choose an option: ");
@@ -38,7 +37,6 @@ public class ProfileMenu
     private void ShowOrganisedEvents(int userId)
     {
         Console.WriteLine("Events I Organise");
-        ConsoleHelper.PrintDivider();
 
         try
         {
@@ -49,6 +47,7 @@ public class ProfileMenu
             if (events.Count == 0)
             {
                 ConsoleHelper.PrintError("No events organised yet.");
+                ConsoleHelper.PrintDivider();
                 return;
             }
             
@@ -81,12 +80,12 @@ public class ProfileMenu
         {
             ConsoleHelper.PrintError("Events data is not available yet.");
         }
+        ConsoleHelper.PrintDivider();
     }
 
     private void ShowReceivedReviews(int userId)
     {
         Console.WriteLine("Reviews I Have Received");
-        ConsoleHelper.PrintDivider();
 
         try
         {
@@ -98,6 +97,7 @@ public class ProfileMenu
             if (myEvents.Count == 0)
             {
                 ConsoleHelper.PrintError("No reviews received yet.");
+                ConsoleHelper.PrintDivider();
                 return;
             }
             
@@ -139,5 +139,6 @@ public class ProfileMenu
         {
             ConsoleHelper.PrintError("Reviews data is not available yet.");
         }
+        ConsoleHelper.PrintDivider();
     }
 }
