@@ -103,8 +103,15 @@ public class MainMenu
                     break;
                 
                 case "6":
-                    ConsoleHelper.PrintError("My Profile is not available yet.");
-                    ConsoleHelper.PressAnyKeyToContinue();
+                    try
+                    {
+                        new ProfileMenu(_userService, _eventService, _reviewService).Show();
+                    }
+                    catch (NotImplementedException)
+                    { 
+                        ConsoleHelper.PrintError("My Profile is not available yet."); 
+                        ConsoleHelper.PressAnyKeyToContinue();
+                    }
                     break;
                 
                 case "7":
