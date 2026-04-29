@@ -89,19 +89,14 @@ public class EventService
     }
 
     /// <summary>Returns a single event by ID, or null if not found.</summary>
-        public Event? GetById(int eventId)
+    public Event? GetById(int eventId)
     {
         return _eventRepository.GetById(eventId);
     }
 
-    /// <summary>
-    /// Returns all upcoming events matching the given keyword.
-    /// </summary>
-    /// <param name="keyword">Case-insensitive search term.</param>
-    /// <returns>Filtered list of upcoming events.</returns>
+    /// <summary>Returns all upcoming events matching the given keyword.</summary>
     public List<Event> SearchEvents(string keyword)
     {
-
         if (string.IsNullOrWhiteSpace(keyword))
             return new List<Event>();
 
@@ -115,23 +110,7 @@ public class EventService
             .OrderBy(e => e.EventDate)
             .ToList();
     }
-}
 
-        var events = GetAll(EventStatus.Upcoming);
-
-        if (string.IsNullOrWhiteSpace(keyword))
-            return events;
-
-        keyword = keyword.ToLower();
-
-        return events
-            .Where(e =>
-                e.Title.ToLower().Contains(keyword) ||
-                e.Description.ToLower().Contains(keyword) ||
-                e.Venue.ToLower().Contains(keyword))
-            .ToList();
-    }
-    
     /// <summary>Returns all upcoming events in the selected category.</summary>
     public List<Event> FilterByCategory(EventCategory category)
     {
@@ -145,9 +124,9 @@ public class EventService
     {
         if (string.IsNullOrWhiteSpace(type))
             return GetAll(EventStatus.Upcoming);
-        
+
         return GetAll(EventStatus.Upcoming)
-            .Where(e => e.Type.ToLower() == type.ToLower())
+            .Where(e => e.EventType.ToLower() == type.ToLower())
             .ToList();
     }
 
@@ -160,7 +139,7 @@ public class EventService
             events = events.Where(e => e.Category == category.Value).ToList();
 
         if (!string.IsNullOrWhiteSpace(type))
-            events = events.Where(e => e.Type.ToLower() == type.ToLower()).ToList();
+            events = events.Where(e => e.EventType.ToLower() == type.ToLower()).ToList();
 
         return events;
     }
