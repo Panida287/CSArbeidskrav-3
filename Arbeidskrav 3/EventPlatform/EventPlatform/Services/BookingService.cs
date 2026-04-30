@@ -12,6 +12,12 @@ namespace EventPlatform.Services;
 public class BookingService
 {
     private readonly BookingRepository _bookingRepository;
+    
+    /// <summary>Returns all ticket types for a given event.</summary>
+    public List<TicketType> GetTicketTypesForEvent(int eventId)
+    {
+        return _bookingRepository.GetTicketTypesByEvent(eventId);
+    }
 
     public BookingService(BookingRepository bookingRepository)
     {
