@@ -109,7 +109,7 @@ public class ProfileMenu
 
             foreach (var ev in myEvents)
             {
-                var reviews = _reviewService.GetReviews(ev.EventId);
+                var reviews = _reviewService.GetReviewsForEvent(ev.EventId);
                 foreach (var r in reviews)
                 {
                     allReviews.Add((ev.Title, r.Rating, r.Comment));
