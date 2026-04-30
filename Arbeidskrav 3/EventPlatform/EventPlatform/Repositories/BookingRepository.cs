@@ -170,4 +170,43 @@ public class BookingRepository
 
         return references;
     }
+    
+    /// <summary>Returns all bookings for a user with event and ticket details joined in.</summary>
+    public List<BookingDetail> GetByUserWithDetails(int userId)
+    {
+        var results = new List<BookingDetail>();
+
+        using var connection = _db.GetConnection();
+
+        var command = connection.CreateCommand();
+        command.CommandText = @"
+        SELECT b.BookingId, b.Reference, b.Status, b.PriceAtBooking, b.BookingDate,
+               e.Title, e.EventDate,
+               t.Name
+        FROM Bookings b
+        JOIN Events e ON b.EventId = e.EventId
+        JOIN TicketTypes t ON b.TicketTypeId = t.TicketTypeId
+        WHERE b.UserId = @userId
+        ORDER BY e.EventDate ASC;";
+
+        command.Parameters.AddWithValue("@userId", userId);
+
+        using var reader = command.ExecuteReader();
+        while (reader.Read())
+        {
+            results.Add(new BookingDetail
+            {
+                BookingId      = reader.GetInt32(0),
+                Reference      = reader.GetString(1),
+                Status         = Enum.Parse<BookingStatus>(reader.GetString(2)),
+                PriceAtBooking = (decimal)reader.GetDouble(3),
+                BookingDate    = DateTime.Parse(reader.GetString(4)),
+                EventTitle     = reader.GetString(5),
+                EventDate      = DateTime.Parse(reader.GetString(6)),
+                TicketName     = reader.GetString(7)
+            });
+        }
+
+        return results;
+    }
 }
