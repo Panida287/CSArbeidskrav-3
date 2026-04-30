@@ -1,3 +1,4 @@
+using System;
 using EventPlatform.Services;
 
 namespace EventPlatform.UI.Menus;

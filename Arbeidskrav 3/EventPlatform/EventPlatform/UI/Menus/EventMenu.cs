@@ -2,7 +2,8 @@ using EventPlatform.Services;
 using EventPlatform.Enums;
 using EventPlatform.Models;
 using EventPlatform.Models.Events;
-using System.Linq;
+using System;
+using System.Collections.Generic;
 
 namespace EventPlatform.UI.Menus;
 
@@ -13,11 +14,16 @@ public class EventMenu
 {
     private readonly EventService _eventService;
     private readonly UserService _userService;
+    private readonly BookingService _bookingService;
+    private readonly ReviewService _reviewService;
 
-    public EventMenu(EventService eventService, UserService userService)
+    public EventMenu(EventService eventService, UserService userService, BookingService bookingService,
+        ReviewService reviewService)
     {
         _eventService = eventService;
         _userService = userService;
+        _bookingService = bookingService;
+        _reviewService = reviewService;
     }
 
     public void ShowBrowse()
