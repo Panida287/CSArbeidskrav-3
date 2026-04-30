@@ -3,7 +3,7 @@ using EventPlatform.Enums;
 using EventPlatform.Models;
 using EventPlatform.Models.Events;
 
-namespace EventPlatform.UI.Menus;
+namespace EventPlatform.UI.Menus.Events;
 
 /// <summary>
 /// Full information screen for a selected event.
