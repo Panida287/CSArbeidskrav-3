@@ -1,3 +1,5 @@
+using System;
+
 namespace EventPlatform.UI;
 
 /// <summary>
@@ -22,5 +24,11 @@ public static class ConsoleHelper
     {
         Console.WriteLine("\nPress any key to continue...");
         Console.ReadKey(intercept: true);
+    }
+
+    public static void ClearAndPrintHeader(string title)
+    {
+        Console.Clear();
+        PrintHeader(title);
     }
 }
