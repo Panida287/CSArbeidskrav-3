@@ -13,8 +13,10 @@ var userRepository = new UserRepository(db);
 var userService = new UserService(userRepository);
 var eventRepository = new EventRepository(db);
 var eventService = new EventService(eventRepository);
-var bookingService = new BookingService(new BookingRepository());
-var reviewService = new ReviewService();
+var bookingRepository = new BookingRepository();
+var bookingService = new BookingService(bookingRepository);
+var reviewRepository = new ReviewRepository();
+var reviewService = new ReviewService(reviewRepository, bookingRepository);
 
 var authMenu = new AuthMenu(userService, eventService, bookingService, reviewService);
 authMenu.Show();
