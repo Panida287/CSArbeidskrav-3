@@ -73,8 +73,44 @@ public class EventDetailMenu
 
             ConsoleHelper.PrintDivider();
 
-            // --- Ticket types table (not yet available) ---
-            Console.WriteLine("    Ticket info not available yet.");
+            // --- Ticket types table ---
+            try
+            {
+                var tickets = _bookingService.GetTicketTypesForEvent(eventId);
+
+                if (tickets.Count > 0)
+                {
+                    Console.WriteLine(
+                        "    " +
+                        "Ticket Type".PadRight(24) +
+                        "Price".PadRight(12) +
+                        "Availability"
+                    );
+                    ConsoleHelper.PrintDivider();
+
+                    foreach (var t in tickets)
+                    {
+                        string remaining = t.Remaining > 0
+                            ? $"{t.Remaining} left"
+                            : "Sold Out";
+
+                        Console.WriteLine(
+                            "    " +
+                            t.Name.PadRight(24) +
+                            $"kr {(int)t.Price}".PadRight(12) +
+                            remaining
+                        );
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("    No ticket types available.");
+                }
+            }
+            catch (NotImplementedException)
+            {
+                Console.WriteLine("    Ticket info not available yet.");
+            }
 
             ConsoleHelper.PrintDivider();
 
