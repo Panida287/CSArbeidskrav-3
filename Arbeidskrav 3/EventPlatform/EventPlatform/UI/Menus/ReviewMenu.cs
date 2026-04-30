@@ -21,7 +21,7 @@ public class ReviewMenu
         _userService = userService;
     }
 
-    public void ShowLeaveReview(int bookingId, Event ev)
+    public void ShowLeaveReview(Booking booking, Event ev)
     {
         ConsoleHelper.ClearAndPrintHeader("Leave a Review");
         ConsoleHelper.PrintDivider();
@@ -34,7 +34,7 @@ public class ReviewMenu
             ConsoleHelper.PressAnyKeyToContinue();
             return;
         }
-        
+
         //Check 1: event must be completed
         if (ev.Status != EventStatus.Completed)
         {
@@ -42,7 +42,7 @@ public class ReviewMenu
             ConsoleHelper.PressAnyKeyToContinue();
             return;
         }
-        
+
         //Check 2: user cannot review their own event
         if (user.UserId == ev.OrganiserId)
         {
@@ -50,26 +50,16 @@ public class ReviewMenu
             ConsoleHelper.PressAnyKeyToContinue();
             return;
         }
-        
-        //Check 3: user hasn't already reviewed this booking
-        try
-        {
-            bool eligible = _reviewService.IsEligible(user.UserId, bookingId);
 
-            if (!eligible)
-            {
-                ConsoleHelper.PrintError("You have already reviewed this booking.");
-                ConsoleHelper.PressAnyKeyToContinue();
-                return;
-            }
-        }
-        catch (NotImplementedException)
+        //Check 3: user hasn't already reviewed this booking
+        bool eligible = _reviewService.IsEligible(user, ev, booking);
+        if (!eligible)
         {
-            ConsoleHelper.PrintError("Review eligibility check is not available yet.");
+            ConsoleHelper.PrintError("You have already reviewed this booking.");
             ConsoleHelper.PressAnyKeyToContinue();
             return;
         }
-        
+
         //Ask for rating - re-prompt if outside 1-5
         int rating = 0;
 
@@ -77,35 +67,29 @@ public class ReviewMenu
         {
             Console.Write("Rating (1-5): ");
             string input = Console.ReadLine() ?? "";
-            
+
             if (int.TryParse(input, out rating) && rating >= 1 && rating <= 5)
                 break;
-            
+
             ConsoleHelper.PrintError("Rating must be a number between 1 and 5.");
         }
-        
+
         //Ask for a comment - optional, pressing Enter skips it
         Console.Write("Comment (optional, press Enter to skip): ");
         string comment = Console.ReadLine() ?? "";
-        
-        //Submit the review
-        try
-        {
-            bool success = _reviewService.AddReview(user.UserId, bookingId, rating, comment);
 
-            if (success)
-            {
-                ConsoleHelper.PrintSuccess("Review submitted. Thank you!");
-            }
-            else
-            {
-                ConsoleHelper.PrintError("Could not submit review. Please try again.");
-            }
-        }
-        catch (NotImplementedException)
+        //Submit the review
+        bool success = _reviewService.AddReview(user, ev, booking, rating, comment);
+
+        if (success)
         {
-            ConsoleHelper.PrintError("Review submission is not available yet.");
+            ConsoleHelper.PrintSuccess("Review submitted. Thank you!");
         }
+        else
+        {
+            ConsoleHelper.PrintError("Could not submit review. Please try again.");
+        }
+
         ConsoleHelper.PressAnyKeyToContinue();
     }
 
@@ -116,7 +100,7 @@ public class ReviewMenu
 
         try
         {
-            var reviews = _reviewService.GetReviews(eventId);
+            var reviews = _reviewService.GetReviewsForEvent(eventId);
             double? average = _reviewService.GetAverageRating(eventId);
 
             if (reviews.Count == 0)
@@ -147,7 +131,7 @@ public class ReviewMenu
         {
             ConsoleHelper.PrintError("Reviews are not available yet.");
         }
-        
+
         ConsoleHelper.PrintDivider();
         Console.WriteLine(" 0. Go back");
         ConsoleHelper.PrintDivider();
