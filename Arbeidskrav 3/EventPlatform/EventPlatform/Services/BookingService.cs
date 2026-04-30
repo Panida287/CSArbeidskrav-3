@@ -12,25 +12,19 @@ namespace EventPlatform.Services;
 public class BookingService
 {
     private readonly BookingRepository _bookingRepository;
-    
+
+    public BookingService(BookingRepository bookingRepository)
+    {
+        _bookingRepository = bookingRepository;
+    }
+
     /// <summary>Returns all ticket types for a given event.</summary>
     public List<TicketType> GetTicketTypesForEvent(int eventId)
     {
         return _bookingRepository.GetTicketTypesByEvent(eventId);
     }
 
-    public BookingService(BookingRepository bookingRepository)
-    {
-        _bookingRepository = bookingRepository;
-    }
-    
-    /// <summary>Returns the event for booking purposes.</summary>
-    public Event? GetEventForBooking(int eventId)
-    {
-        throw new NotImplementedException();
-    }
-
-    /// <summary>Books a ticket for the user. Returns null on failure (sold out, own event, etc.).</summary>
+    /// <summary>Books a ticket for the user. Returns null on failure.</summary>
     public Booking? BookTicket(User user, Event ev, TicketType ticketType)
     {
         // Guard 1: user cannot book their own event
@@ -49,12 +43,13 @@ public class BookingService
         // Build the booking
         var booking = new Booking
         {
-            UserId = user.UserId,
-            EventId = ev.EventId,
-            TicketTypeId = ticketType.TicketTypeId,
+            UserId         = user.UserId,
+            EventId        = ev.EventId,
+            TicketTypeId   = ticketType.TicketTypeId,
             PriceAtBooking = ticketType.Price,
-            BookingDate = DateTime.UtcNow,
-            Status = BookingStatus.Confirmed
+            BookingDate    = DateTime.UtcNow,
+            Status         = BookingStatus.Confirmed,
+            Reference      = GenerateReference()
         };
 
         // Save and decrement
@@ -67,24 +62,13 @@ public class BookingService
     /// <summary>Cancels an existing booking. Returns false if not allowed.</summary>
     public bool CancelBooking(int bookingId, User requestingUser)
     {
-        // Step 1: get user's bookings
         var userBookings = _bookingRepository.GetByUser(requestingUser.UserId);
-
-        // Step 2: find booking
         var booking = userBookings.FirstOrDefault(b => b.BookingId == bookingId);
 
-        // Step 3: not found
-        if (booking == null)
-            return false;
+        if (booking == null) return false;
+        if (booking.UserId != requestingUser.UserId) return false;
 
-        // Step 4: ownership check (extra safety)
-        if (booking.UserId != requestingUser.UserId)
-            return false;
-
-        // Step 5: update status
         _bookingRepository.UpdateStatus(bookingId, BookingStatus.Cancelled.ToString());
-
-        // Step 6: restore ticket availability
         _bookingRepository.IncrementRemaining(booking.TicketTypeId);
 
         return true;
@@ -94,5 +78,13 @@ public class BookingService
     public List<Booking> GetUserBookings(int userId)
     {
         return _bookingRepository.GetByUser(userId);
+    }
+
+    /// <summary>Generates a unique booking reference in BK-XXXXX format.</summary>
+    private string GenerateReference()
+    {
+        var existing = _bookingRepository.GetAllReferences();
+        int next = existing.Count + 1;
+        return $"BK-{next:D5}";
     }
 }
