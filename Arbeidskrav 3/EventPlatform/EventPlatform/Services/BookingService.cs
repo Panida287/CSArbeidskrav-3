@@ -79,6 +79,12 @@ public class BookingService
     {
         return _bookingRepository.GetByUser(userId);
     }
+    
+    /// <summary>Returns all bookings for a user with event and ticket details.</summary>
+    public List<BookingDetail> GetUserBookingsWithDetails(int userId)
+    {
+        return _bookingRepository.GetByUserWithDetails(userId);
+    }
 
     /// <summary>Generates a unique booking reference in BK-XXXXX format.</summary>
     private string GenerateReference()
