@@ -177,7 +177,7 @@ public class EventDetailMenu
                 if (input == "1")
                 {
                     var bookingMenu = new BookingMenu(_bookingService, _userService);
-                    bookingMenu.ShowBookTicket(eventId);
+                    bookingMenu.ShowBookTicket(ev);
                 }
                 else if (input == "2")
                 {

@@ -23,6 +23,12 @@ public class BookingService
     {
         _bookingRepository = bookingRepository;
     }
+    
+    /// <summary>Returns the event for booking purposes.</summary>
+    public Event? GetEventForBooking(int eventId)
+    {
+        throw new NotImplementedException();
+    }
 
     /// <summary>Books a ticket for the user. Returns null on failure (sold out, own event, etc.).</summary>
     public Booking? BookTicket(User user, Event ev, TicketType ticketType)
