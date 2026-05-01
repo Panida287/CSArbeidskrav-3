@@ -395,9 +395,99 @@ public class EventMenu
         Console.Write("Choose an option: ");
         Console.ReadLine();
     }
-    
-    
-    public void ShowCreate() => throw new NotImplementedException();
+
+
+    public void ShowCreate()
+    {
+        ConsoleHelper.ClearAndPrintHeader("Create Event");
+        ConsoleHelper.PrintDivider();
+
+        var currentUser = _userService.GetCurrentUser();
+
+        if (currentUser == null)
+        {
+            ConsoleHelper.PrintError("You must be logged in to create an event.");
+            ConsoleHelper.PressAnyKeyToContinue();
+            return;
+        }
+
+        Console.Write("Title: ");
+        string title = Console.ReadLine() ?? "";
+        
+        Console.Write("Description: ");
+        string description = Console.ReadLine() ?? "";
+        
+        Console.Write("Type (Concert, Conference, Workshop): ");
+        string eventType = Console.ReadLine() ?? "";
+        
+        Console.Write("Category (Music, Technology, Arts, Food, Sports, Education, Other): ");
+        string categoryInput = Console.ReadLine() ?? "";
+        
+        Console.Write("Venue: ");
+        string venue = Console.ReadLine() ?? "";
+        
+        Console.Write("Date (yyyy-mm-dd): ");
+        string dateInput = Console.ReadLine() ?? "";
+
+        if (!DateTime.TryParse(dateInput, out DateTime eventDate))
+        {
+            ConsoleHelper.PrintError("Invalid date format.");
+            ConsoleHelper.PressAnyKeyToContinue();
+            return;
+        }
+
+        if (!Enum.TryParse<EventCategory>(categoryInput, true, out var category))
+        {
+            ConsoleHelper.PrintError("Invalid category.");
+            ConsoleHelper.PressAnyKeyToContiniue();
+            return;
+        }
+
+        Event newEvent;
+
+        switch (eventType.Trim().ToLower())
+        {
+            case "concert":
+                newEvent = new Concert();
+                break;
+            
+            case "conference":
+                newEvent = new Conference();
+                break;
+            
+            case "workshop":
+                newEvent = Workshop();
+                break;
+            
+            default:
+                ConsoleHelper.PrintError("Invalid event type.");
+                ConsoleHelper.PressAnyKeyToContiniue();
+                return;
+        }
+
+        newEvent.Title = title;
+        newEvent.Description = description;
+        newEvent.EventType = eventType;
+        newEvent.Category = category;
+        newEvent.Venue = venue;
+        newEvent.EventDate = eventDate;
+        newEvent.OrganiserId = currentUser.UserId;
+        newEvent.Status = EventStatus.Upcoming;
+
+        try
+        {
+            _eventService.Create(newEvent);
+
+            ConsoleHelper.PrintSuccess("Event created successfully!");
+        }
+        catch (Exception ex)
+        {
+            ConsoleHelper.PrintError(ex.Message);
+        }
+
+        ConsoleHelper.PressAnyKeyToContinue();
+
+    }
 
 
     public void ShowMyEvents()
