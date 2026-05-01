@@ -398,7 +398,40 @@ public class EventMenu
     
     
     public void ShowCreate() => throw new NotImplementedException();
-    
-    
-    public void ShowMyEvents() => throw new NotImplementedException();
+
+
+    public void ShowMyEvents()
+    {
+        var currentUser = _userService.GetCurrentUser();
+
+        if (currentUser == null)
+        {
+            ConsoleHelper.PrintError("You must be logged in to view your events.");
+            ConsoleHelper.PressAnyKeyToContinue();
+            return;
+        }
+        
+        ConsoleHelper.ClearAndPrintHeader("My Events");
+        ConsoleHelper.PrintDivider();
+        
+        var myEvents _eventService
+            .GetAll()
+            .Where(e => e.OrganiserId == currentUser.UserId)
+            .ToList();
+
+        if (!myEvents.Any())
+        {
+            ConsoleHelper.PrintError("You have not created any events yet.");
+            ConsoleHelper.PressAnyKeyToContiniue();
+            return;
+        }
+
+        PrintEventTable(myEvents);
+
+        ConsoleHelper.PrintDivider();
+        Console.WriteLine(" 0. Go back");
+        ConsoleHelper.PrintDivider();
+        Console.Write("Choose an option: ");
+        Console.ReadLine();
+    }
 }
