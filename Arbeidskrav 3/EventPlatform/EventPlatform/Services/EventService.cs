@@ -103,7 +103,6 @@ public class EventService
         keyword = keyword.ToLower();
 
         return _eventRepository.GetAll()
-            .Where(e => e.EventDate > DateTime.UtcNow)
             .Where(e => e.Title.ToLower().Contains(keyword)
                     || e.Description.ToLower().Contains(keyword)
                     || e.Venue.ToLower().Contains(keyword))
@@ -114,7 +113,7 @@ public class EventService
     /// <summary>Returns all upcoming events in the selected category.</summary>
     public List<Event> FilterByCategory(EventCategory category)
     {
-        return GetAll(EventStatus.Upcoming)
+        return GetAll()
             .Where(e => e.Category == category)
             .ToList();
     }
@@ -123,9 +122,9 @@ public class EventService
     public List<Event> FilterByType(string type)
     {
         if (string.IsNullOrWhiteSpace(type))
-            return GetAll(EventStatus.Upcoming);
+            return GetAll();
 
-        return GetAll(EventStatus.Upcoming)
+        return GetAll()
             .Where(e => e.EventType.ToLower() == type.ToLower())
             .ToList();
     }
