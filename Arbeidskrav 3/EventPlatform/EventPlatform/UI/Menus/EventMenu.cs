@@ -79,7 +79,7 @@ public class EventMenu
             "Title".PadRight(26) +
             "Type".PadRight(14) +
             "Date".PadRight(14) +
-            "Tickets"
+            "Status"
             );
         ConsoleHelper.PrintDivider();
         
@@ -87,7 +87,12 @@ public class EventMenu
         for (int i = 0; i < events.Count; i++)
         {
             var e = events[i];
-            string tickets = e.Status == EventStatus.Upcoming ? "Available" : "Sold Out";
+            
+            string status =
+            e.Status == EventStatus.Cancelled ? "Cancelled" :
+            e.EventDate <= DateTime.UtcNow ? "Ended" :
+            "Available";
+            
             string date = e.EventDate.ToString("yyyy-MM-dd");
 
             Console.WriteLine(
@@ -95,7 +100,7 @@ public class EventMenu
                 e.Title.PadRight(26) +
                 e.EventType.PadRight(14) +
                 date.PadRight(14) +
-                tickets
+                status
                 );
         }
     }
@@ -364,9 +369,10 @@ public class EventMenu
                 return;
             }
 
-            string tickets = e.Status == EventStatus.Upcoming
-                ? "Available"
-                : "Sold Out";
+            string status =
+                e.Status == EventStatus.Cancelled ? "Cancelled" :
+                e.EventDate <= DateTime.UtcNow ? "Ended" : 
+                "Available";
 
             Console.WriteLine($"    Title:      {e.Title}");
             Console.WriteLine($"    Type:       {e.EventType}");
@@ -374,7 +380,7 @@ public class EventMenu
             Console.WriteLine($"    Date        {e.EventDate:yyyy-MM-dd}");
             Console.WriteLine($"    Venue       {e.Venue}");
             Console.WriteLine($"    Description {e.Description}");
-            Console.WriteLine($"    Tickets     {tickets}");
+            Console.WriteLine($"    Status      {status}");
         }
         catch (NotImplementedException)
         {
