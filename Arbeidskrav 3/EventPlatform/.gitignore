@@ -1,0 +1,23 @@
+## Visual Studio / .NET
+.vs/
+bin/
+obj/
+*.user
+*.suo
+*.userprefs
+
+## Build output
+out/
+publish/
+
+## SQLite databases (excluded per project convention)
+*.db
+*.db-shm
+*.db-wal
+
+## macOS
+.DS_Store
+
+## JetBrains Rider
+.idea/
+*.DotSettings.user
