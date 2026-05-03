@@ -105,11 +105,11 @@ SQLite was chosen because it requires no server setup, works cross-platform, and
 
 | File | Description |
 |------|-------------|
-| [Requirements & User Stories](Arbeidskrav%203/docs/UserStory.md) | User stories with acceptance criteria |
+| [Requirements & User Stories](Arbeidskrav%203/EventPlatform/docs/UserStory.md) | User stories with acceptance criteria |
 | [GitHub Project Board](https://github.com/users/Panida287/projects/14/views/3) | Task breakdown and sprint timeline |
-| [Process Report](Arbeidskrav%203/docs/process-report.md) | Team reflection and process review |
-| [UML Class Diagram](Arbeidskrav%203/docs/uml-class-diagram.html) | UML class diagram |
-| [File Structure & UI Guide](Arbeidskrav%203/docs/file-structure-and-ui-guide.md) | File structure and UI design reference |
-| [AI Prompts Log](Arbeidskrav%203/docs/ai-prompts.md) | All AI prompts used in this project |
-| [Database Schema](Arbeidskrav%203/docs/sql/schema.sql) | Database schema |
-| [Seed Data](Arbeidskrav%203/docs/sql/seed.sql) | Seed data |
+| [Process Report](Arbeidskrav%203/EventPlatform/docs/process-report.md) | Team reflection and process review |
+| [UML Class Diagram](Arbeidskrav%203/EventPlatform/docs/uml-class-diagram.html) | UML class diagram |
+| [File Structure & UI Guide](Arbeidskrav%203/EventPlatform/docs/file-structure-and-ui-guide.md) | File structure and UI design reference |
+| [AI Prompts Log](Arbeidskrav%203/EventPlatform/docs/ai-prompts.md) | All AI prompts used in this project |
+| [Database Schema](Arbeidskrav%203/EventPlatform/docs/sql/schema.sql) | Database schema |
+| [Seed Data](Arbeidskrav%203/EventPlatform/docs/sql/seed.sql) | Seed data |
