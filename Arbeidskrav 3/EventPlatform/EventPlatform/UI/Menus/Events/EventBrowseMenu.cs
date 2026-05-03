@@ -1,22 +1,27 @@
 using EventPlatform.Services;
 using EventPlatform.Enums;
+using EventPlatform.Models;
 using EventPlatform.Models.Events;
-using System.Linq;
 
-namespace EventPlatform.UI.Menus;
+namespace EventPlatform.UI.Menus.Events;
 
 /// <summary>
-/// Browse, Search, Filter, Event Detail, Create Event, My Events screens.
+/// Browse, Search, and Filter event screens.
 /// </summary>
-public class EventMenu
+public class EventBrowseMenu
 {
     private readonly EventService _eventService;
     private readonly UserService _userService;
+    private readonly BookingService _bookingService;
+    private readonly ReviewService _reviewService;
 
-    public EventMenu(EventService eventService, UserService userService)
+    public EventBrowseMenu(EventService eventService, UserService userService,
+        BookingService bookingService, ReviewService reviewService)
     {
         _eventService = eventService;
         _userService = userService;
+        _bookingService = bookingService;
+        _reviewService = reviewService;
     }
 
     public void ShowBrowse()
@@ -27,7 +32,6 @@ public class EventMenu
             ConsoleHelper.PrintDivider();
 
             List<Event> events;
-
             try
             {
                 events = _eventService.GetAll()
@@ -49,59 +53,21 @@ public class EventMenu
             }
 
             PrintEventTable(events);
-            
             ConsoleHelper.PrintDivider();
             Console.WriteLine(" 0. Go back");
             ConsoleHelper.PrintDivider();
             Console.Write("Select event number to view details: ");
 
             string input = Console.ReadLine() ?? "";
-            
             if (input == "0") return;
 
             if (int.TryParse(input, out int choice) && choice >= 1 && choice <= events.Count)
-            {
                 ShowDetail(events[choice - 1].EventId);
-            }
             else
             {
                 ConsoleHelper.PrintError("Invalid selection. Please try again.");
                 ConsoleHelper.PressAnyKeyToContinue();
             }
-        }
-    }
-
-    private void PrintEventTable(List<Event> events)
-    {
-        //Print column headers
-        Console.WriteLine(
-            " #".PadRight(4) +
-            "Title".PadRight(26) +
-            "Type".PadRight(14) +
-            "Date".PadRight(14) +
-            "Status"
-            );
-        ConsoleHelper.PrintDivider();
-        
-        //Print each event as a row
-        for (int i = 0; i < events.Count; i++)
-        {
-            var e = events[i];
-            
-            string status =
-            e.Status == EventStatus.Cancelled ? "Cancelled" :
-            e.EventDate <= DateTime.UtcNow ? "Ended" :
-            "Available";
-            
-            string date = e.EventDate.ToString("yyyy-MM-dd");
-
-            Console.WriteLine(
-                $" {i + 1}".PadRight(4) +
-                e.Title.PadRight(26) +
-                e.EventType.PadRight(14) +
-                date.PadRight(14) +
-                status
-                );
         }
     }
 
@@ -114,7 +80,6 @@ public class EventMenu
             Console.Write("Enter keyword (or 0 to go back): ");
 
             string keyword = Console.ReadLine() ?? "";
-            
             if (keyword == "0") return;
 
             if (string.IsNullOrWhiteSpace(keyword))
@@ -136,7 +101,7 @@ public class EventMenu
                     ConsoleHelper.PressAnyKeyToContinue();
                     continue;
                 }
-                
+
                 PrintEventTable(events);
                 ConsoleHelper.PrintDivider();
                 Console.WriteLine(" 0. Go back");
@@ -144,14 +109,10 @@ public class EventMenu
                 Console.Write("Select event number to view details: ");
 
                 string input = Console.ReadLine() ?? "";
-                
                 if (input == "0") return;
 
-                if (int.TryParse(input, out int choice) &&
-                    choice >= 1 && choice <= events.Count)
-                {
+                if (int.TryParse(input, out int choice) && choice >= 1 && choice <= events.Count)
                     ShowDetail(events[choice - 1].EventId);
-                }
                 else
                 {
                     ConsoleHelper.PrintError("Invalid selection. Please try again.");
@@ -180,17 +141,10 @@ public class EventMenu
             Console.Write("Choose an option: ");
 
             string choice = Console.ReadLine() ?? "";
-            
             if (choice == "0") return;
 
-            if (choice == "1")
-            {
-                ShowFilterByCategory();
-            }
-            else if (choice == "2")
-            {
-                ShowFilterByType();
-            }
+            if (choice == "1") ShowFilterByCategory();
+            else if (choice == "2") ShowFilterByType();
             else
             {
                 ConsoleHelper.PrintError("Invalid option. Please try again.");
@@ -213,7 +167,7 @@ public class EventMenu
         Console.WriteLine(" 0. Go back");
         ConsoleHelper.PrintDivider();
         Console.Write("Choose a category: ");
-        
+
         string input = Console.ReadLine() ?? "";
 
         EventCategory? selected = input switch
@@ -227,7 +181,7 @@ public class EventMenu
             "7" => EventCategory.Other,
             _ => null
         };
-        
+
         if (input == "0") return;
         if (selected == null)
         {
@@ -241,7 +195,7 @@ public class EventMenu
             var events = _eventService.GetAll()
                 .Where(e => e.Category == selected)
                 .ToList();
-            
+
             ConsoleHelper.ClearAndPrintHeader($"Events: {selected}");
             ConsoleHelper.PrintDivider();
 
@@ -251,7 +205,7 @@ public class EventMenu
                 ConsoleHelper.PressAnyKeyToContinue();
                 return;
             }
-            
+
             PrintEventTable(events);
             ConsoleHelper.PrintDivider();
             Console.WriteLine(" 0. Go back");
@@ -260,12 +214,9 @@ public class EventMenu
 
             string choice = Console.ReadLine() ?? "";
             if (choice == "0") return;
-            
-            if (int.TryParse(choice, out int eventChoice) &&
-                eventChoice >= 1 && eventChoice <= events.Count)
-            {
+
+            if (int.TryParse(choice, out int eventChoice) && eventChoice >= 1 && eventChoice <= events.Count)
                 ShowDetail(events[eventChoice - 1].EventId);
-            }
             else
             {
                 ConsoleHelper.PrintError("Invalid selection.");
@@ -291,7 +242,6 @@ public class EventMenu
         Console.Write("Choose a type: ");
 
         string input = Console.ReadLine() ?? "";
-        
         if (input == "0") return;
 
         string? selectedType = input switch
@@ -314,7 +264,7 @@ public class EventMenu
             var events = _eventService.GetAll()
                 .Where(e => e.EventType == selectedType)
                 .ToList();
-            
+
             ConsoleHelper.ClearAndPrintHeader($"Events: {selectedType}");
             ConsoleHelper.PrintDivider();
 
@@ -324,7 +274,7 @@ public class EventMenu
                 ConsoleHelper.PressAnyKeyToContinue();
                 return;
             }
-            
+
             PrintEventTable(events);
             ConsoleHelper.PrintDivider();
             Console.WriteLine(" 0. Go back");
@@ -333,12 +283,9 @@ public class EventMenu
 
             string choice = Console.ReadLine() ?? "";
             if (choice == "0") return;
-            
-            if (int.TryParse(choice, out int eventChoice) &&
-                eventChoice >= 1 && eventChoice <= events.Count)
-            {
+
+            if (int.TryParse(choice, out int eventChoice) && eventChoice >= 1 && eventChoice <= events.Count)
                 ShowDetail(events[eventChoice - 1].EventId);
-            }
             else
             {
                 ConsoleHelper.PrintError("Invalid selection.");
@@ -352,176 +299,36 @@ public class EventMenu
         }
     }
 
-
-    public void ShowDetail(int eventId)
+    private void ShowDetail(int eventId)
     {
-        ConsoleHelper.ClearAndPrintHeader("Event Details");
-        ConsoleHelper.PrintDivider();
-
-        try
-        {
-            var e = _eventService.GetById(eventId);
-
-            if (e == null)
-            {
-                ConsoleHelper.PrintError("Event not found.");
-                ConsoleHelper.PressAnyKeyToContinue();
-                return;
-            }
-
-            string status =
-                e.Status == EventStatus.Cancelled ? "Cancelled" :
-                e.EventDate <= DateTime.UtcNow ? "Ended" : 
-                "Available";
-
-            Console.WriteLine($"    Title:      {e.Title}");
-            Console.WriteLine($"    Type:       {e.EventType}");
-            Console.WriteLine($"    Category    {e.Category}");
-            Console.WriteLine($"    Date        {e.EventDate:yyyy-MM-dd}");
-            Console.WriteLine($"    Venue       {e.Venue}");
-            Console.WriteLine($"    Description {e.Description}");
-            Console.WriteLine($"    Status      {status}");
-        }
-        catch (NotImplementedException)
-        {
-            ConsoleHelper.PrintError("Event details are not available yet.");
-            ConsoleHelper.PressAnyKeyToContinue();
-            return;
-        }
-        
-        ConsoleHelper.PrintDivider();
-        Console.WriteLine(" 0. Go back");
-        ConsoleHelper.PrintDivider();
-        Console.Write("Choose an option: ");
-        Console.ReadLine();
+        var detailMenu = new EventDetailMenu(_eventService, _userService, _bookingService, _reviewService);
+        detailMenu.Show(eventId);
     }
 
-
-    public void ShowCreate()
+    public static void PrintEventTable(List<Event> events)
     {
-        ConsoleHelper.ClearAndPrintHeader("Create Event");
+        Console.WriteLine(
+            " #".PadRight(4) +
+            "Title".PadRight(26) +
+            "Type".PadRight(14) +
+            "Date".PadRight(14) +
+            "Tickets"
+        );
         ConsoleHelper.PrintDivider();
 
-        var currentUser = _userService.GetCurrentUser();
-
-        if (currentUser == null)
+        for (int i = 0; i < events.Count; i++)
         {
-            ConsoleHelper.PrintError("You must be logged in to create an event.");
-            ConsoleHelper.PressAnyKeyToContinue();
-            return;
+            var e = events[i];
+            string tickets = e.Status == EventStatus.Upcoming ? "Available" : "Sold Out";
+            string date = e.EventDate.ToString("yyyy-MM-dd");
+
+            Console.WriteLine(
+                $" {i + 1}".PadRight(4) +
+                e.Title.PadRight(26) +
+                e.EventType.PadRight(14) +
+                date.PadRight(14) +
+                tickets
+            );
         }
-
-        Console.Write("Title: ");
-        string title = Console.ReadLine() ?? "";
-        
-        Console.Write("Description: ");
-        string description = Console.ReadLine() ?? "";
-        
-        Console.Write("Type (Concert, Conference, Workshop): ");
-        string eventType = Console.ReadLine() ?? "";
-        
-        Console.Write("Category (Music, Technology, Arts, Food, Sports, Education, Other): ");
-        string categoryInput = Console.ReadLine() ?? "";
-        
-        Console.Write("Venue: ");
-        string venue = Console.ReadLine() ?? "";
-        
-        Console.Write("Date (yyyy-mm-dd): ");
-        string dateInput = Console.ReadLine() ?? "";
-
-        if (!DateTime.TryParse(dateInput, out DateTime eventDate))
-        {
-            ConsoleHelper.PrintError("Invalid date format.");
-            ConsoleHelper.PressAnyKeyToContinue();
-            return;
-        }
-
-        if (!Enum.TryParse<EventCategory>(categoryInput, true, out var category))
-        {
-            ConsoleHelper.PrintError("Invalid category.");
-            ConsoleHelper.PressAnyKeyToContiniue();
-            return;
-        }
-
-        Event newEvent;
-
-        switch (eventType.Trim().ToLower())
-        {
-            case "concert":
-                newEvent = new Concert();
-                break;
-            
-            case "conference":
-                newEvent = new Conference();
-                break;
-            
-            case "workshop":
-                newEvent = Workshop();
-                break;
-            
-            default:
-                ConsoleHelper.PrintError("Invalid event type.");
-                ConsoleHelper.PressAnyKeyToContiniue();
-                return;
-        }
-
-        newEvent.Title = title;
-        newEvent.Description = description;
-        newEvent.EventType = eventType;
-        newEvent.Category = category;
-        newEvent.Venue = venue;
-        newEvent.EventDate = eventDate;
-        newEvent.OrganiserId = currentUser.UserId;
-        newEvent.Status = EventStatus.Upcoming;
-
-        try
-        {
-            _eventService.Create(newEvent);
-
-            ConsoleHelper.PrintSuccess("Event created successfully!");
-        }
-        catch (Exception ex)
-        {
-            ConsoleHelper.PrintError(ex.Message);
-        }
-
-        ConsoleHelper.PressAnyKeyToContinue();
-
-    }
-
-
-    public void ShowMyEvents()
-    {
-        var currentUser = _userService.GetCurrentUser();
-
-        if (currentUser == null)
-        {
-            ConsoleHelper.PrintError("You must be logged in to view your events.");
-            ConsoleHelper.PressAnyKeyToContinue();
-            return;
-        }
-        
-        ConsoleHelper.ClearAndPrintHeader("My Events");
-        ConsoleHelper.PrintDivider();
-        
-        var myEvents _eventService
-            .GetAll()
-            .Where(e => e.OrganiserId == currentUser.UserId)
-            .ToList();
-
-        if (!myEvents.Any())
-        {
-            ConsoleHelper.PrintError("You have not created any events yet.");
-            ConsoleHelper.PressAnyKeyToContiniue();
-            return;
-        }
-
-        PrintEventTable(myEvents);
-
-        ConsoleHelper.PrintDivider();
-        Console.WriteLine(" 0. Go back");
-        ConsoleHelper.PrintDivider();
-        Console.Write("Choose an option: ");
-        Console.ReadLine();
     }
 }

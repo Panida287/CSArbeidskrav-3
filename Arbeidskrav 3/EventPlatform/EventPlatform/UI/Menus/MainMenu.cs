@@ -1,4 +1,6 @@
 using EventPlatform.Services;
+using EventPlatform.UI.Menus.Events;
+using System;
 
 namespace EventPlatform.UI.Menus;
 
@@ -44,7 +46,7 @@ public class MainMenu
                 case "1":
                     try
                     {
-                        new EventMenu(_eventService, _userService).ShowBrowse();
+                        new EventBrowseMenu(_eventService, _userService, _bookingService, _reviewService).ShowBrowse();
                     }
                     catch (NotImplementedException)
                     {
@@ -52,19 +54,19 @@ public class MainMenu
                         ConsoleHelper.PressAnyKeyToContinue();
                     }
                     break;
-                
+
                 case "2":
                     try
                     {
-                        new EventMenu(_eventService, _userService).ShowSearch();
+                        new EventBrowseMenu(_eventService, _userService, _bookingService, _reviewService).ShowSearch();
                     }
                     catch (NotImplementedException)
                     {
-                        ConsoleHelper.PrintError("Search Events is not available yet");
+                        ConsoleHelper.PrintError("Search Events is not available yet.");
                         ConsoleHelper.PressAnyKeyToContinue();
                     }
                     break;
-                
+
                 case "3":
                     try
                     {
@@ -72,16 +74,15 @@ public class MainMenu
                     }
                     catch (NotImplementedException)
                     {
-                        ConsoleHelper.PrintError("My Booking is not available yet.");
+                        ConsoleHelper.PrintError("My Bookings is not available yet.");
                         ConsoleHelper.PressAnyKeyToContinue();
                     }
                     break;
-                
+
                 case "4":
                     try
                     {
-                        new EventMenu(_eventService, _userService).ShowCreate();
-
+                        new EventCreateMenu(_eventService, _userService).ShowCreate();
                     }
                     catch (NotImplementedException)
                     {
@@ -89,11 +90,11 @@ public class MainMenu
                         ConsoleHelper.PressAnyKeyToContinue();
                     }
                     break;
-                
+
                 case "5":
                     try
                     {
-                        new EventMenu(_eventService, _userService).ShowMyEvents();
+                        new EventManageMenu(_eventService, _userService).ShowMyEvents();
                     }
                     catch (NotImplementedException)
                     {
@@ -101,17 +102,24 @@ public class MainMenu
                         ConsoleHelper.PressAnyKeyToContinue();
                     }
                     break;
-                
+
                 case "6":
-                    ConsoleHelper.PrintError("My Profile is not available yet.");
-                    ConsoleHelper.PressAnyKeyToContinue();
+                    try
+                    {
+                        new ProfileMenu(_userService, _eventService, _reviewService).Show();
+                    }
+                    catch (NotImplementedException)
+                    {
+                        ConsoleHelper.PrintError("My Profile is not available yet.");
+                        ConsoleHelper.PressAnyKeyToContinue();
+                    }
                     break;
-                
+
                 case "7":
                     _userService.Logout();
                     new AuthMenu(_userService, _eventService, _bookingService, _reviewService).Show();
                     return;
-                
+
                 default:
                     ConsoleHelper.PrintError("Invalid option. Please try again.");
                     ConsoleHelper.PressAnyKeyToContinue();
