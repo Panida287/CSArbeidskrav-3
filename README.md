@@ -105,11 +105,11 @@ SQLite was chosen because it requires no server setup, works cross-platform, and
 
 | File | Description |
 |------|-------------|
-| [EventPlatform/docs/requirements.md](docs/requirements.md) | User stories with acceptance criteria |
+| [Arbeidskrav 3/docs/requirements.md](docs/requirements.md) | User stories with acceptance criteria |
 | [GitHub Project Board](https://github.com/users/Panida287/projects/14/views/3) | Task breakdown and sprint timeline |
-| [EventPlatform/docs/process-report.md](docs/process-report.md) | Team reflection and process review |
-| [EventPlatform/docs/uml-class-diagram.html](docs/uml-class-diagram.html) | UML class diagram |
-| [EventPlatform/docs/file-structure-and-ui-guide.md](docs/file-structure-and-ui-guide.md) | File structure and UI design reference |
-| [EventPlatform/docs/ai-prompts.md](docs/ai-prompts.md) | All AI prompts used in this project |
-| [EventPlatform/docs/sql/schema.sql](docs/sql/schema.sql) | Database schema |
-| [EventPlatform/docs/sql/seed.sql](docs/sql/seed.sql) | Seed data |
+| [Arbeidskrav 3/docs/process-report.md](docs/process-report.md) | Team reflection and process review |
+| [Arbeidskrav 3/docs/uml-class-diagram.html](docs/uml-class-diagram.html) | UML class diagram |
+| [Arbeidskrav 3/docs/file-structure-and-ui-guide.md](docs/file-structure-and-ui-guide.md) | File structure and UI design reference |
+| [Arbeidskrav 3/docs/ai-prompts.md](docs/ai-prompts.md) | All AI prompts used in this project |
+| [Arbeidskrav 3/docs/sql/schema.sql](docs/sql/schema.sql) | Database schema |
+| [Arbeidskrav 3/docs/sql/seed.sql](docs/sql/seed.sql) | Seed data |
