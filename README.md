@@ -105,11 +105,11 @@ SQLite was chosen because it requires no server setup, works cross-platform, and
 
 | File | Description |
 |------|-------------|
-| [docs/requirements.md](docs/requirements.md) | User stories with acceptance criteria |
+| [EventPlatform/docs/requirements.md](docs/requirements.md) | User stories with acceptance criteria |
 | [GitHub Project Board](https://github.com/users/Panida287/projects/14/views/3) | Task breakdown and sprint timeline |
-| [docs/process-report.md](docs/process-report.md) | Team reflection and process review |
-| [docs/uml-class-diagram.html](docs/uml-class-diagram.html) | UML class diagram |
-| [docs/file-structure-and-ui-guide.md](docs/file-structure-and-ui-guide.md) | File structure and UI design reference |
-| [docs/ai-prompts.md](docs/ai-prompts.md) | All AI prompts used in this project |
-| [docs/sql/schema.sql](docs/sql/schema.sql) | Database schema |
-| [docs/sql/seed.sql](docs/sql/seed.sql) | Seed data |
+| [EventPlatform/docs/process-report.md](docs/process-report.md) | Team reflection and process review |
+| [EventPlatform/docs/uml-class-diagram.html](docs/uml-class-diagram.html) | UML class diagram |
+| [EventPlatform/docs/file-structure-and-ui-guide.md](docs/file-structure-and-ui-guide.md) | File structure and UI design reference |
+| [EventPlatform/docs/ai-prompts.md](docs/ai-prompts.md) | All AI prompts used in this project |
+| [EventPlatform/docs/sql/schema.sql](docs/sql/schema.sql) | Database schema |
+| [EventPlatform/docs/sql/seed.sql](docs/sql/seed.sql) | Seed data |
