@@ -81,6 +81,14 @@ public class EventService
     {
         var events = _eventRepository.GetAll();
 
+        // Auto-complete events whose date has passed and are still Upcoming
+        foreach (var e in events.Where(e => e.Status == EventStatus.Upcoming
+                                          && e.EventDate <= DateTime.UtcNow))
+        {
+            e.Status = EventStatus.Completed;
+            _eventRepository.UpdateStatus(e.EventId, EventStatus.Completed);
+        }
+
         if (statusFilter.HasValue)
             events = events.Where(e => e.Status == statusFilter.Value).ToList();
 
@@ -88,9 +96,18 @@ public class EventService
     }
 
     /// <summary>Returns a single event by ID, or null if not found.</summary>
-        public Event? GetById(int eventId)
+    public Event? GetById(int eventId)
     {
-        return _eventRepository.GetById(eventId);
+        var e = _eventRepository.GetById(eventId);
+
+        if (e != null && e.Status == EventStatus.Upcoming
+                      && e.EventDate <= DateTime.UtcNow)
+        {
+            e.Status = EventStatus.Completed;
+            _eventRepository.UpdateStatus(e.EventId, EventStatus.Completed);
+        }
+
+        return e;
     }
 
     /// <summary>
