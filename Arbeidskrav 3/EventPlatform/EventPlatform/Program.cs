@@ -11,9 +11,12 @@ seeder.Seed();
 
 var userRepository = new UserRepository(db);
 var userService = new UserService(userRepository);
-var eventService = new EventService();
-var bookingService = new BookingService();
-var reviewService = new ReviewService();
+var eventRepository = new EventRepository(db);
+var eventService = new EventService(eventRepository);
+var bookingRepository = new BookingRepository(db);
+var bookingService = new BookingService(bookingRepository);
+var reviewRepository = new ReviewRepository();
+var reviewService = new ReviewService(reviewRepository, bookingRepository);
 
 var authMenu = new AuthMenu(userService, eventService, bookingService, reviewService);
 authMenu.Show();
